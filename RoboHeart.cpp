@@ -33,7 +33,10 @@ RoboHeart::~RoboHeart(void)
 
 }
 
-bool GEENYmodem::begin()
+bool RoboHeart::begin()
 {
-    return true;
+}
+
+void RoboHeart::beat()
+{
 }

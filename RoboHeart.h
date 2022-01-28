@@ -14,6 +14,7 @@ class RoboHeart
         ~RoboHeart();
 
         bool begin();
-}
+        void beat();
+};
 
 #endif
