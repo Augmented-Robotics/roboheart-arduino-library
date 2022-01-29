@@ -7,6 +7,8 @@
 #ifndef _ROBOHEART_H
 #define _ROBOHEART_H
 
+#include "pins.h"
+
 class RoboHeart
 {
     public:
@@ -15,6 +17,11 @@ class RoboHeart
 
         bool begin();
         void beat();
+
+        void motor0_coast();
+        void motor0_reverse();
+        void motor0_forward();
+        void motor0_brake();
 };
 
 #endif
