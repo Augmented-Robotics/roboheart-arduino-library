@@ -20,55 +20,35 @@
  * 	MIT (see license.txt)
  */
 
-#include "Arduino.h"
+
 #include "RoboHeart.h"
 
 RoboHeart::RoboHeart(void)
 {
+   
+    //motor0 = new RoboHeartDRV8836();
 
+    
+    //motor1 = new RoboHeartDRV8836();
+
+   
+    //motor2 = new RoboHeartDRV8836();
+    
 }
 
 RoboHeart::~RoboHeart(void)
 {
-
 }
 
 bool RoboHeart::begin()
 {
+    
+   
     // MOTOR SETUP
     
-    pinMode(GPIO_M0A_PH_IN1, OUTPUT);//  PHASE/IN1
-    digitalWrite(GPIO_M0A_PH_IN1,LOW);
-    pinMode(GPIO_M0B_EN_IN2, OUTPUT);//  ENABLE/IN2
-    digitalWrite(GPIO_M0B_EN_IN2,LOW); 
-    pinMode(GPIO_M0_MODE, OUTPUT);//  MODE
-    // MODE PIN LOW --> IN/IN MODE
-    // MODE PIN HIGH --> PHASE/ENABLE MODE
-    digitalWrite(GPIO_M0_MODE,LOW);
-    pinMode(GPIO_M0_SLEEP, OUTPUT);//  nSLEEP
-    digitalWrite(GPIO_M0_SLEEP,HIGH);
-
-    pinMode(GPIO_M1A_PH_IN1, OUTPUT);//  PHASE/IN1
-    digitalWrite(GPIO_M1A_PH_IN1,LOW);
-    pinMode(GPIO_M1B_EN_IN2, OUTPUT);//  ENABLE/IN2
-    digitalWrite(GPIO_M1B_EN_IN2,LOW); 
-    pinMode(GPIO_M1_MODE, OUTPUT);//  MODE
-    // MODE PIN LOW --> IN/IN MODE
-    // MODE PIN HIGH --> PHASE/ENABLE MODE
-    digitalWrite(GPIO_M1_MODE,LOW);
-    pinMode(GPIO_M1_SLEEP, OUTPUT);//  nSLEEP
-    digitalWrite(GPIO_M1_SLEEP,HIGH);
-
-     pinMode(GPIO_M2A_PH_IN1, OUTPUT);//  PHASE/IN1
-    digitalWrite(GPIO_M2A_PH_IN1,LOW);
-    pinMode(GPIO_M2B_EN_IN2, OUTPUT);//  ENABLE/IN2
-    digitalWrite(GPIO_M2B_EN_IN2,LOW); 
-    pinMode(GPIO_M2_MODE, OUTPUT);//  MODE
-    // MODE PIN LOW --> IN/IN MODE
-    // MODE PIN HIGH --> PHASE/ENABLE MODE
-    digitalWrite(GPIO_M2_MODE,LOW);
-    pinMode(GPIO_M2_SLEEP, OUTPUT);//  nSLEEP
-    digitalWrite(GPIO_M2_SLEEP,HIGH);
+    motor0.begin(GPIO_M0_MODE, GPIO_M0A_PH_IN1, GPIO_M0B_EN_IN2, GPIO_M0_SLEEP);
+    motor1.begin(GPIO_M1_MODE, GPIO_M1A_PH_IN1, GPIO_M1B_EN_IN2, GPIO_M1_SLEEP);
+    motor2.begin(GPIO_M2_MODE, GPIO_M2A_PH_IN1, GPIO_M2B_EN_IN2, GPIO_M2_SLEEP);
 
     return true;
 }
@@ -81,75 +61,63 @@ void RoboHeart::beat()
 
 void RoboHeart::motor0_coast()
 {
-    digitalWrite(GPIO_M0A_PH_IN1,LOW);
-    digitalWrite(GPIO_M0B_EN_IN2,LOW); 
+    motor0.coast(); 
 }
 
-void RoboHeart::motor0_reverse()
+void RoboHeart::motor0_reverse(uint8_t speed)
 {
-    digitalWrite(GPIO_M0A_PH_IN1,LOW);
-    digitalWrite(GPIO_M0B_EN_IN2,HIGH); 
+    motor0.reverse(speed);
 }
 
-void RoboHeart::motor0_forward()
+void RoboHeart::motor0_forward(uint8_t speed)
 {
-    digitalWrite(GPIO_M0A_PH_IN1,HIGH);
-    digitalWrite(GPIO_M0B_EN_IN2,LOW); 
+    motor0.forward(speed);
 }
 
 void RoboHeart::motor0_brake()
 {
-    digitalWrite(GPIO_M0A_PH_IN1,HIGH);
-    digitalWrite(GPIO_M0B_EN_IN2,HIGH); 
+    motor0.brake();
 }
+
 
 
 void RoboHeart::motor1_coast()
 {
-    digitalWrite(GPIO_M1A_PH_IN1,LOW);
-    digitalWrite(GPIO_M1B_EN_IN2,LOW); 
+    motor1.coast(); 
 }
 
-void RoboHeart::motor1_reverse()
+void RoboHeart::motor1_reverse(uint8_t speed)
 {
-    digitalWrite(GPIO_M1A_PH_IN1,LOW);
-    digitalWrite(GPIO_M1B_EN_IN2,HIGH); 
+    motor1.reverse(speed);
 }
 
-void RoboHeart::motor1_forward()
+void RoboHeart::motor1_forward(uint8_t speed)
 {
-    digitalWrite(GPIO_M1A_PH_IN1,HIGH);
-    digitalWrite(GPIO_M1B_EN_IN2,LOW); 
+    motor1.forward(speed);
 }
 
 void RoboHeart::motor1_brake()
 {
-    digitalWrite(GPIO_M1A_PH_IN1,HIGH);
-    digitalWrite(GPIO_M1B_EN_IN2,HIGH); 
+    motor1.brake();
 }
-
 
 
 void RoboHeart::motor2_coast()
 {
-    digitalWrite(GPIO_M2A_PH_IN1,LOW);
-    digitalWrite(GPIO_M2B_EN_IN2,LOW); 
+    motor2.coast(); 
 }
 
-void RoboHeart::motor2_reverse()
+void RoboHeart::motor2_reverse(uint8_t speed)
 {
-    digitalWrite(GPIO_M2A_PH_IN1,LOW);
-    digitalWrite(GPIO_M2B_EN_IN2,HIGH); 
+    motor2.reverse(speed);
 }
 
-void RoboHeart::motor2_forward()
+void RoboHeart::motor2_forward(uint8_t speed)
 {
-    digitalWrite(GPIO_M2A_PH_IN1,HIGH);
-    digitalWrite(GPIO_M2B_EN_IN2,LOW); 
+    motor2.forward(speed);
 }
 
 void RoboHeart::motor2_brake()
 {
-    digitalWrite(GPIO_M2A_PH_IN1,HIGH);
-    digitalWrite(GPIO_M2B_EN_IN2,HIGH); 
+    motor2.brake();
 }
