@@ -102,3 +102,54 @@ void RoboHeart::motor0_brake()
     digitalWrite(GPIO_M0A_PH_IN1,HIGH);
     digitalWrite(GPIO_M0B_EN_IN2,HIGH); 
 }
+
+
+void RoboHeart::motor1_coast()
+{
+    digitalWrite(GPIO_M1A_PH_IN1,LOW);
+    digitalWrite(GPIO_M1B_EN_IN2,LOW); 
+}
+
+void RoboHeart::motor1_reverse()
+{
+    digitalWrite(GPIO_M1A_PH_IN1,LOW);
+    digitalWrite(GPIO_M1B_EN_IN2,HIGH); 
+}
+
+void RoboHeart::motor1_forward()
+{
+    digitalWrite(GPIO_M1A_PH_IN1,HIGH);
+    digitalWrite(GPIO_M1B_EN_IN2,LOW); 
+}
+
+void RoboHeart::motor1_brake()
+{
+    digitalWrite(GPIO_M1A_PH_IN1,HIGH);
+    digitalWrite(GPIO_M1B_EN_IN2,HIGH); 
+}
+
+
+
+void RoboHeart::motor2_coast()
+{
+    digitalWrite(GPIO_M2A_PH_IN1,LOW);
+    digitalWrite(GPIO_M2B_EN_IN2,LOW); 
+}
+
+void RoboHeart::motor2_reverse()
+{
+    digitalWrite(GPIO_M2A_PH_IN1,LOW);
+    digitalWrite(GPIO_M2B_EN_IN2,HIGH); 
+}
+
+void RoboHeart::motor2_forward()
+{
+    digitalWrite(GPIO_M2A_PH_IN1,HIGH);
+    digitalWrite(GPIO_M2B_EN_IN2,LOW); 
+}
+
+void RoboHeart::motor2_brake()
+{
+    digitalWrite(GPIO_M2A_PH_IN1,HIGH);
+    digitalWrite(GPIO_M2B_EN_IN2,HIGH); 
+}
