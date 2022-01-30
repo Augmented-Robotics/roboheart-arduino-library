@@ -1,3 +1,5 @@
+#ifndef _ROBOHEART_PINS_H
+#define _ROBOHEART_PINS_H
 /*
 *** This file will disapear and it will be replaced by an arduino_pin.h that we include into the esspresif arduino core
 */
@@ -23,8 +25,12 @@
 //LOAD SWITCH ENABLE FOR MOTORS
 #define LS_EN_CNTRL 14
 
-#define SPI_SDA 23
-#define SPI_SCL 22
+#define I2C_SDA 23
+#define I2C_SCL 22
 
 
 //FOR REFERENCE: PWM PINS OF ESP32: 2, 4, 5, 12-19, 21-23, 27, 32, 33
+
+#define MPU6050_I2C_ADDR 0x68
+
+#endif

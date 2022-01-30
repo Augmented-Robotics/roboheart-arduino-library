@@ -7,9 +7,13 @@
 #ifndef _ROBOHEART_H
 #define _ROBOHEART_H
 
-#include <Arduino.h>
 #include "pins.h"
+#include <Arduino.h>
+
 #include "RoboHeartDRV8836.h"
+#include <Wire.h>
+#include <MPU6050_light.h>
+
 
 class RoboHeart
 {
@@ -35,11 +39,28 @@ class RoboHeart
         void motor2_forward(uint8_t speed);
         void motor2_brake();
 
+        float getTemp();
+        float getAccX();
+        float getAccY();
+        float getAccZ();
+        float getGyroX();
+        float getGyroY();
+        float getGyroZ();  
+        float getAccAngleX();
+        float getAccAngleY();
+        float getAngleX();
+        float getAngleY();
+        float getAngleZ();
+
     private:
         RoboHeartDRV8836 motor0;
         RoboHeartDRV8836 motor1;
         RoboHeartDRV8836 motor2;
         
+        
+        
 };
+
+extern MPU6050 mpu;
 
 #endif

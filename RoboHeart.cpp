@@ -23,25 +23,31 @@
 
 #include "RoboHeart.h"
 
-RoboHeart::RoboHeart(void)
+
+RoboHeart::RoboHeart()
 {
-   
-    //motor0 = new RoboHeartDRV8836();
-
-    
-    //motor1 = new RoboHeartDRV8836();
-
-   
-    //motor2 = new RoboHeartDRV8836();
     
 }
 
 RoboHeart::~RoboHeart(void)
 {
+    //delete mpu;
 }
 
 bool RoboHeart::begin()
 {
+     // MPU6050 SETUP
+    Serial.print("MPU6050 status: ");
+    byte status = mpu.begin();
+    
+    Serial.println(status);
+    if(status == 0)
+    {
+        Serial.println("Calculating offsets, do not move MPU6050");
+        delay(1000);
+        mpu.calcOffsets(true,true); // gyro and accelero
+        Serial.println("Done!\n");
+    }
     
    
     // MOTOR SETUP
@@ -55,6 +61,7 @@ bool RoboHeart::begin()
 
 void RoboHeart::beat()
 {
+     mpu.update();
 }
 
 
@@ -121,3 +128,22 @@ void RoboHeart::motor2_brake()
 {
     motor2.brake();
 }
+
+float RoboHeart::getTemp(){ return mpu.getTemp(); }
+
+float RoboHeart::getAccX(){ return mpu.getAccX(); }
+float RoboHeart::getAccY(){ return mpu.getAccY(); }
+float RoboHeart::getAccZ(){ return mpu.getAccZ(); }
+
+float RoboHeart::getGyroX(){ return mpu.getGyroX(); }
+float RoboHeart::getGyroY(){ return mpu.getGyroY(); }
+float RoboHeart::getGyroZ(){ return mpu.getGyroZ(); }
+
+float RoboHeart::getAccAngleX(){ return mpu.getAccAngleX(); }
+float RoboHeart::getAccAngleY(){ return mpu.getAccAngleY(); }
+
+float RoboHeart::getAngleX(){ return mpu.getAngleX(); }
+float RoboHeart::getAngleY(){ return mpu.getAngleY(); }
+float RoboHeart::getAngleZ(){ return mpu.getAngleZ(); }
+
+MPU6050 mpu(Wire);
