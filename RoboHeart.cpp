@@ -38,6 +38,7 @@ bool RoboHeart::begin()
 {
      // MPU6050 SETUP
     Serial.print("MPU6050 status: ");
+    mpu.setAddress(MPU6050_I2C_ADDR);
     byte status = mpu.begin();
     
     Serial.println(status);
