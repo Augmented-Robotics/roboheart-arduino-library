@@ -4,8 +4,6 @@
 #include <BLE2902.h>
 #include <BLEAdvertising.h>
 
-// See the following for generating UUIDs:
-// https://www.uuidgenerator.net/
 
 #define GATTS_SERVICE_UUID 0x00FF
 uint8_t service_uuid[16] = {
@@ -14,14 +12,10 @@ uint8_t service_uuid[16] = {
   0xfb, 0x34, 0x9b, 0x5f, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, (uint8_t) (GATTS_SERVICE_UUID), (uint8_t) (GATTS_SERVICE_UUID >> 8), 0x00, 0x00,
 };
 
-#define SERVICE_UUID        "000000ff-0000-1000-8000-00805f9b34fb"
-
-//this short String also results in 000000ff-0000-1000-8000-00805f9b34fb:
-//#define SERVICE_UUID        "00FF"
-
-#define CHARACTERISTIC_UUID1 "FF01"
-#define CHARACTERISTIC_UUID2 "FF02"
-#define CHARACTERISTIC_UUID3 "FF03"
+#define SERVICE_UUID         "000000ff-0000-1000-8000-00805f9b34fb"
+#define CHARACTERISTIC_UUID1 "0000ff01-0000-1000-8000-00805f9b34fb"
+#define CHARACTERISTIC_UUID2 "0000ff02-0000-1000-8000-00805f9b34fb"
+#define CHARACTERISTIC_UUID3 "0000ff03-0000-1000-8000-00805f9b34fb"
 
 static uint8_t char_value[4] = {0x11, 0x22, 0x33, 0x44};
 
@@ -65,6 +59,8 @@ void setup() {
   Serial.begin(115200);
 
   BLEDevice::init("ESP_GATT_SERVER");
+  esp_ble_gatts_app_register(ESP_APP_ID);
+
   pServer = BLEDevice::createServer();
   pServer->m_appId = ESP_APP_ID;
 
@@ -76,9 +72,6 @@ void setup() {
 
   pServer->setCallbacks(new MyServerCallbacks());
 
-  //esp_ble_gatts_app_register(ESP_APP_ID);
-
-
   BLECharacteristic *pCharacteristic1 = pService->createCharacteristic(
                                           CHARACTERISTIC_UUID1,
                                           BLECharacteristic::PROPERTY_READ |
@@ -86,8 +79,9 @@ void setup() {
                                         );
 
   pCharacteristic1->setCallbacks(new MyCallbacks());
+  Serial.print("Characteristic1 UUID: ");
+  Serial.println(pCharacteristic1->getUUID().toString().c_str());
 
-  
   pCharacteristic2 = pService->createCharacteristic(
                        CHARACTERISTIC_UUID2,
                        BLECharacteristic::PROPERTY_READ |
@@ -98,6 +92,9 @@ void setup() {
 
   pCharacteristic2->setCallbacks(new MyCallbacks());
 
+  Serial.print("Characteristic2 UUID: ");
+  Serial.println(pCharacteristic2->getUUID().toString().c_str());
+
   BLECharacteristic *pCharacteristic3 = pService->createCharacteristic(
                                           CHARACTERISTIC_UUID3,
                                           BLECharacteristic::PROPERTY_READ |
@@ -106,12 +103,20 @@ void setup() {
 
   pCharacteristic3->setCallbacks(new MyCallbacks());
 
+  Serial.print("Characteristic3 UUID: ");
+  Serial.println(pCharacteristic3->getUUID().toString().c_str());
+
   pCharacteristic1->setValue(char_value, 4);
   pCharacteristic2->setValue(char_value, 4);
   pCharacteristic3->setValue(char_value, 4);
   pService->start();
 
   BLEAdvertising *pAdvertising = pServer->getAdvertising();
+ 
+  pAdvertising->setMinPreferred(0x20);
+  pAdvertising->setMaxPreferred(0x40);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setScanFilter(false, false);
   pAdvertising->start();
 }
 
