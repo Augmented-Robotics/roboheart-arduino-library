@@ -32,10 +32,12 @@ BLECharacteristic* pCharacteristic2 = NULL;
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       deviceConnected = true;
+      Serial.println("device connected.");  
     };
 
     void onDisconnect(BLEServer* pServer) {
       deviceConnected = false;
+      Serial.println("device disconnected.");  
     }
 };
 
@@ -59,10 +61,10 @@ void setup() {
   Serial.begin(115200);
 
   BLEDevice::init("ESP_GATT_SERVER");
-  esp_ble_gatts_app_register(ESP_APP_ID);
+  //esp_ble_gatts_app_register(ESP_APP_ID);
 
   pServer = BLEDevice::createServer();
-  pServer->m_appId = ESP_APP_ID;
+  //pServer->m_appId = ESP_APP_ID;
 
   BLEService *pService = pServer->createService(SERVICE_UUID);
   //BLEService *pService = pServer->createService(BLEUUID((uint16_t)0x00FF));         //result: 000000ff-0000-1000-8000-00805f9b34fb
@@ -112,11 +114,12 @@ void setup() {
   pService->start();
 
   BLEAdvertising *pAdvertising = pServer->getAdvertising();
- 
-  pAdvertising->setMinPreferred(0x20);
-  pAdvertising->setMaxPreferred(0x40);
-  pAdvertising->setScanResponse(true);
-  pAdvertising->setScanFilter(false, false);
+
+  //pAdvertising->setMinPreferred(0x20);
+  //pAdvertising->setMaxPreferred(0x40);
+  //pAdvertising->setScanResponse(true);
+  //pAdvertising->setScanFilter(false, false);
+  pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->start();
 }
 
