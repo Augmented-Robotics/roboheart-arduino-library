@@ -72,6 +72,11 @@ void RoboHeart::motor0_coast()
     motor0.coast(); 
 }
 
+void RoboHeart::motor0_sleep(bool sleep)
+{
+    motor0.sleep(sleep); 
+}
+
 void RoboHeart::motor0_reverse(uint8_t speed)
 {
     motor0.reverse(speed);
@@ -92,6 +97,12 @@ void RoboHeart::motor0_brake()
 void RoboHeart::motor1_coast()
 {
     motor1.coast(); 
+}
+
+
+void RoboHeart::motor1_sleep(bool sleep)
+{
+    motor1.sleep(sleep); 
 }
 
 void RoboHeart::motor1_reverse(uint8_t speed)
@@ -115,6 +126,12 @@ void RoboHeart::motor2_coast()
     motor2.coast(); 
 }
 
+
+void RoboHeart::motor2_sleep(bool sleep)
+{
+    motor2.sleep(sleep); 
+}
+
 void RoboHeart::motor2_reverse(uint8_t speed)
 {
     motor2.reverse(speed);
@@ -129,6 +146,74 @@ void RoboHeart::motor2_brake()
 {
     motor2.brake();
 }
+
+
+ void RoboHeart::handleMotorMessage(Motor_MSG_t motormsg, char* response)
+ {
+     switch(motormsg.command)
+     {
+         case 1:
+            //forward
+            motor1_forward(motormsg.speed);
+            sprintf (response, "forward");
+            break;
+         case 2:
+            //reverse
+            motor1_reverse(motormsg.speed);
+            sprintf (response, "reverse");
+            break;
+         case 3:
+            //right
+            sprintf (response, "right");
+            motor2_forward(motormsg.steering_power);
+            break;
+         case 4:
+            //left
+            sprintf (response, "left");
+            motor2_reverse(motormsg.steering_power);
+            break;
+         case 5:
+            //forward and right
+            sprintf (response, "forward and right");
+            motor1_forward(motormsg.speed);
+            motor2_forward(motormsg.steering_power);
+            break;
+         case 6:
+            //forward and left
+            sprintf (response, "forward and left");
+            motor1_forward(motormsg.speed);
+            motor2_reverse(motormsg.steering_power);
+            break;
+         case 7:
+            //reverse and right
+            sprintf (response, "reverse and right");
+            motor1_reverse(motormsg.speed);
+            motor2_forward(motormsg.steering_power);
+            break;
+        case 8:
+            //reverse and left
+            sprintf (response, "reverse and left");
+            motor1_reverse(motormsg.speed);
+            motor2_reverse(motormsg.steering_power);
+            break;
+        case 0:
+            //STOP
+            sprintf (response, "STOP");
+            motor1.brake();
+            motor2.brake();
+            
+            break;  
+        default:
+            //STOP
+            sprintf (response, "ERROR: %d", motormsg.command);
+            motor1.brake();
+            motor2.brake();
+            break;    
+     }
+
+        
+ }
+
 
 float RoboHeart::getTemp(){ return mpu.getTemp(); }
 

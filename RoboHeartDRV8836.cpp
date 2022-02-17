@@ -30,6 +30,16 @@ RoboHeartDRV8836::~RoboHeartDRV8836()
     digitalWrite(_nsleepPin,HIGH);
  }
 
+ void RoboHeartDRV8836::sleep(bool sleep)
+ {
+    analogWrite(_in1Pin, 0);
+    analogWrite(_in2Pin, 0);
+    digitalWrite(_in1Pin, LOW);
+    digitalWrite(_in2Pin, LOW);
+    digitalWrite(_nsleepPin,!sleep);   
+ }
+
+
  void RoboHeartDRV8836::coast()
  {
     analogWrite(_in1Pin, 0);
@@ -44,7 +54,7 @@ void RoboHeartDRV8836::forward(uint8_t speed)
     digitalWrite(_in2Pin, LOW);
      _speed = speed;
     
-    if(speed == 255)
+    if(speed >= 254)
     {
         digitalWrite(_in1Pin, HIGH);
         return;
@@ -57,7 +67,7 @@ void RoboHeartDRV8836::reverse(uint8_t speed)
     digitalWrite(_in1Pin, LOW);
     _speed = speed;
     
-    if(speed == 255)
+    if(speed >= 254)
     {
         digitalWrite(_in2Pin, HIGH);
         return;
@@ -67,6 +77,8 @@ void RoboHeartDRV8836::reverse(uint8_t speed)
 
 void RoboHeartDRV8836::brake()
 {
+    analogWrite(_in1Pin, 0);
+    analogWrite(_in2Pin, 0);
     digitalWrite(_in1Pin, HIGH);
     digitalWrite(_in2Pin, HIGH);
     _speed = 0;    

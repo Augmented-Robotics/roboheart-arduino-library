@@ -16,6 +16,7 @@ class RoboHeartDRV8836
         RoboHeartDRV8836();
         ~RoboHeartDRV8836();
         void begin(int modePin, int in1Pin, int in2Pin, int nsleepPin);
+        void sleep(bool sleep=true);
         void coast();
         void forward(uint8_t speed);
         void reverse(uint8_t speed);
