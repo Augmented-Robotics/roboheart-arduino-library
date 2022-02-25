@@ -4,6 +4,10 @@
 #include <BLE2902.h>
 #include <BLEAdvertising.h>
 
+#include <RoboHeart.h>
+
+
+RoboHeart heart = RoboHeart();
 
 #define GATTS_SERVICE_UUID 0x00FF
 uint8_t service_uuid[16] = {
@@ -32,33 +36,64 @@ BLECharacteristic* pCharacteristic2 = NULL;
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       deviceConnected = true;
-      Serial.println("device connected.");  
+      Serial.println("device connected.");
+      heart.motor0_sleep(false);
+      heart.motor1_sleep(false);
+      heart.motor2_sleep(false);
     };
 
     void onDisconnect(BLEServer* pServer) {
       deviceConnected = false;
-      Serial.println("device disconnected.");  
+      Serial.println("device disconnected.");
+      heart.motor0_sleep(true);
+      heart.motor1_sleep(true);
+      heart.motor2_sleep(true);
     }
 };
 
 class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
-      std::string value = pCharacteristic->getValue();
 
-      if (value.length() > 0) {
+      std::string value = pCharacteristic->getValue();
+      if (value.length() == 3) {
         Serial.println("*********");
         Serial.print("New value: ");
         for (int i = 0; i < value.length(); i++)
-          Serial.print(value[i]);
-
+        {
+          Serial.print(value[i], HEX);
+          Serial.print(" ");
+        }
         Serial.println();
+        Motor_MSG_t motor_message = { (uint8_t)value[0], ((uint8_t)value[1]) * 4,  ((uint8_t)value[2]) * 4};
+        Serial.println("MOTOR MESSAGE:");
+        Serial.print("command: ");
+        Serial.println(motor_message.command);
+        Serial.print("speed: ");
+        Serial.println(motor_message.speed);
+        Serial.print("steering_power: ");
+        Serial.println(motor_message.steering_power);
+
+        char response[20];
+        heart.handleMotorMessage(motor_message, &response[0]);
+        Serial.print("response: ");
+        Serial.println(response);
+
         Serial.println("*********");
       }
+
+
+
     }
 };
 
 void setup() {
   Serial.begin(115200);
+
+  Wire.setPins(I2C_SDA, I2C_SCL);
+  Wire.begin();
+
+  //set up the RoboHeart
+  heart.begin();
 
   BLEDevice::init("ESP_GATT_SERVER");
   //esp_ble_gatts_app_register(ESP_APP_ID);
@@ -124,6 +159,9 @@ void setup() {
 }
 
 void loop() {
+  //give computing time to the RoboHeart
+  heart.beat();
+
   // notify changed value
   if (deviceConnected) {
     char_value[0]++;
@@ -138,6 +176,9 @@ void loop() {
     pServer->startAdvertising(); // restart advertising
     Serial.println("start advertising");
     oldDeviceConnected = deviceConnected;
+    heart.motor0_sleep(true);
+    heart.motor1_sleep(true);
+    heart.motor2_sleep(true);
   }
   // connecting
   if (deviceConnected && !oldDeviceConnected) {
