@@ -5,22 +5,22 @@
 */
 
 //MOTOR 0
-#define GPIO_M0A_PH_IN1     25     //  PHASE/IN1  //DAC1
-#define GPIO_M0B_EN_IN2     26     //  ENABLE/IN2  //DAC2
+#define GPIO_M0A_PH_IN1     25  //  PHASE/IN1  //DAC1
+#define GPIO_M0B_EN_IN2     26  //  ENABLE/IN2  //DAC2
 #define GPIO_M0_MODE        2   //  MODE        
-#define GPIO_M0_SLEEP       36    //  SLEEP
+#define GPIO_M0_SLEEP       0   //  nSLEEP
 
 //MOTOR 1
-#define GPIO_M1A_PH_IN1     27   //  PHASE/IN1 
-#define GPIO_M1B_EN_IN2     32      //  ENABLE/IN2  
-#define GPIO_M1_MODE        34    //  MODE       
-#define GPIO_M1_SLEEP       35     //  SLEEP       
+#define GPIO_M1A_PH_IN1     27  //  PHASE/IN1 
+#define GPIO_M1B_EN_IN2     32  //  ENABLE/IN2  
+#define GPIO_M1_MODE        2   //  MODE       
+#define GPIO_M1_SLEEP       0   //  nSLEEP       
 
 //MOTOR 2
-#define GPIO_M2A_PH_IN1     33   //  PHASE/IN1
+#define GPIO_M2A_PH_IN1     33  //  PHASE/IN1
 #define GPIO_M2B_EN_IN2     4   //  ENABLE/IN2
-#define GPIO_M2_MODE        16    //  MODE 
-#define GPIO_M2_SLEEP       17    //  SLEEP
+#define GPIO_M2_MODE        2   //  MODE 
+#define GPIO_M2_SLEEP       0   //  nSLEEP
 
 //LOAD SWITCH ENABLE FOR MOTORS
 #define LS_EN_CNTRL 14
@@ -32,5 +32,15 @@
 //FOR REFERENCE: PWM PINS OF ESP32: 2, 4, 5, 12-19, 21-23, 27, 32, 33
 
 #define MPU6050_I2C_ADDR 0x69
+
+#define LED_BUILTIN 0
+
+#define RX1 16
+#define TX1 17
+
+#define SPI_SS    5
+#define SPI_MOSI  23
+#define SPI_MISO  19
+#define SPI_SCK   18
 
 #endif
