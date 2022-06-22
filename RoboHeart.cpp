@@ -54,9 +54,9 @@ bool RoboHeart::begin()
    
     // MOTOR SETUP
     
-    motor0.begin(GPIO_M0_MODE, GPIO_M0A_PH_IN1, GPIO_M0B_EN_IN2, GPIO_M0_SLEEP);
-    motor1.begin(GPIO_M1_MODE, GPIO_M1A_PH_IN1, GPIO_M1B_EN_IN2, GPIO_M1_SLEEP);
-    motor2.begin(GPIO_M2_MODE, GPIO_M2A_PH_IN1, GPIO_M2B_EN_IN2, GPIO_M2_SLEEP);
+    motor0.begin(GPIO_MA_MODE, GPIO_MA_PH_IN1, GPIO_MA_EN_IN2, GPIO_MA_SLEEP, M_DRIVER_A);
+    motor1.begin(GPIO_MB_MODE, GPIO_MB_PH_IN1, GPIO_MB_EN_IN2, GPIO_MB_SLEEP, M_DRIVER_B);
+    motor2.begin(GPIO_MC_MODE, GPIO_MC_PH_IN1, GPIO_MC_EN_IN2, GPIO_MC_SLEEP, M_DRIVER_C);
 
     return true;
 }
@@ -155,60 +155,60 @@ void RoboHeart::motor2_brake()
      {
          case 1:
             //forward
-            motor1_forward(motormsg.speed);
+            motor2_forward(motormsg.speed);
             sprintf (response, "forward");
             break;
          case 2:
             //reverse
-            motor1_reverse(motormsg.speed);
+            motor2_reverse(motormsg.speed);
             sprintf (response, "reverse");
             break;
          case 3:
             //right
             sprintf (response, "right");
-            motor2_forward(motormsg.steering_power);
+            motor1_forward(motormsg.steering_power);
             break;
          case 4:
             //left
             sprintf (response, "left");
-            motor2_reverse(motormsg.steering_power);
+            motor1_reverse(motormsg.steering_power);
             break;
          case 5:
             //forward and right
             sprintf (response, "forward and right");
-            motor1_forward(motormsg.speed);
-            motor2_forward(motormsg.steering_power);
+            motor2_forward(motormsg.speed);
+            motor1_forward(motormsg.steering_power);
             break;
          case 6:
             //forward and left
             sprintf (response, "forward and left");
-            motor1_forward(motormsg.speed);
-            motor2_reverse(motormsg.steering_power);
+            motor2_forward(motormsg.speed);
+            motor1_reverse(motormsg.steering_power);
             break;
          case 7:
             //reverse and right
             sprintf (response, "reverse and right");
-            motor1_reverse(motormsg.speed);
-            motor2_forward(motormsg.steering_power);
+            motor2_reverse(motormsg.speed);
+            motor1_forward(motormsg.steering_power);
             break;
         case 8:
             //reverse and left
             sprintf (response, "reverse and left");
-            motor1_reverse(motormsg.speed);
-            motor2_reverse(motormsg.steering_power);
+            motor2_reverse(motormsg.speed);
+            motor1_reverse(motormsg.steering_power);
             break;
         case 0:
             //STOP
             sprintf (response, "STOP");
-            motor1.brake();
             motor2.brake();
+            motor1.brake();
             
             break;  
         default:
             //STOP
             sprintf (response, "ERROR: %d", motormsg.command);
-            motor1.brake();
             motor2.brake();
+            motor1.brake();
             break;    
      }
 

@@ -39,9 +39,9 @@
 
     typedef struct 
     { 
-        uint8_t command; 
-        uint8_t speed; 
-        uint8_t steering_power; 
+        int command; 
+        int speed; 
+        int steering_power; 
     } Motor_MSG_t;
 
 
