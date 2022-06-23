@@ -33,6 +33,15 @@ BLEServer* pServer = NULL;
 BLECharacteristic* pCharacteristic2 = NULL;
 
 
+// Safety timer
+hw_timer_t * timer = NULL;
+volatile int timer_triggered = 0;
+ 
+void IRAM_ATTR onTimer() {
+  timer_triggered++;
+ 
+}
+ 
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       deviceConnected = true;
@@ -56,15 +65,18 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 
       std::string value = pCharacteristic->getValue();
       if (value.length() == 3) {
+        timerStop(timer);
+        timerRestart(timer);
         Serial.println("*********");
         Serial.print("New value: ");
         for (int i = 0; i < value.length(); i++)
         {
-          Serial.print(value[i], HEX);
+          Serial.print(int(value[i]));
           Serial.print(" ");
         }
         Serial.println();
-        Motor_MSG_t motor_message = { (uint8_t)value[0], ((uint8_t)value[1]) * 4,  ((uint8_t)value[2]) * 4};
+
+        Motor_MSG_t motor_message = { value[0], 3*int(value[1]), 3*int(value[2])};
         Serial.println("MOTOR MESSAGE:");
         Serial.print("command: ");
         Serial.println(motor_message.command);
@@ -79,6 +91,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         Serial.println(response);
 
         Serial.println("*********");
+        timerStart(timer);
       }
 
 
@@ -94,7 +107,7 @@ void setup() {
 
   //set up the RoboHeart
   heart.begin();
-
+  
   BLEDevice::init("ESP_GATT_SERVER");
   //esp_ble_gatts_app_register(ESP_APP_ID);
 
@@ -156,6 +169,14 @@ void setup() {
   //pAdvertising->setScanFilter(false, false);
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->start();
+
+  // Prescaler: 80. Count up, 1s timer
+  timer = timerBegin(0, 80, true);
+  timerAttachInterrupt(timer, &onTimer, true);
+  timerAlarmWrite(timer, 300000, true);
+  timerStop(timer);
+  timerRestart(timer);
+  timerAlarmEnable(timer);
 }
 
 void loop() {
@@ -184,5 +205,19 @@ void loop() {
   if (deviceConnected && !oldDeviceConnected) {
     // do stuff here on connecting
     oldDeviceConnected = deviceConnected;
+  }
+
+  if (timer_triggered > 0){
+    timerStop(timer);
+    Serial.print("Safety timer activated: ");
+    Serial.println(timer_triggered);
+    
+    timer_triggered = 0;
+
+    Motor_MSG_t motor_message = { 0, 0, 0};
+
+    char response[20];
+    heart.handleMotorMessage(motor_message, &response[0]);
+    
   }
 }
