@@ -23,8 +23,19 @@
 
 #include "RoboHeart.h"
 
+#define DEBUG_ROBOHEART(x) {if (_debug != NULL) {_debug->print("[ROBOHEART_DEBUG] "); _debug->print(x);}}
+#define DEBUG_LN_ROBOHEART(x) {if (_debug != NULL) {_debug->print("[ROBOHEART_DEBUG] "); _debug->println(x);}}
+#define DEBUG(x) {if (_debug != NULL) {_debug->print(x);}}
+#define DEBUG_LN(x) {if (_debug != NULL) {_debug->println(x);}}
 
 RoboHeart::RoboHeart()
+{
+    _debug = NULL;
+
+}
+
+RoboHeart::RoboHeart(Stream& debug)
+: _debug(&debug), motor0(RoboHeartDRV8836(debug)), motor1(RoboHeartDRV8836(debug)), motor2(RoboHeartDRV8836(debug))
 {
     
 }
@@ -78,12 +89,12 @@ void RoboHeart::motor0_sleep(bool sleep)
     motor0.sleep(sleep); 
 }
 
-void RoboHeart::motor0_reverse(uint8_t speed)
+void RoboHeart::motor0_reverse(int speed)
 {
     motor0.reverse(speed);
 }
 
-void RoboHeart::motor0_forward(uint8_t speed)
+void RoboHeart::motor0_forward(int speed)
 {
     motor0.forward(speed);
 }
@@ -106,12 +117,12 @@ void RoboHeart::motor1_sleep(bool sleep)
     motor1.sleep(sleep); 
 }
 
-void RoboHeart::motor1_reverse(uint8_t speed)
+void RoboHeart::motor1_reverse(int speed)
 {
     motor1.reverse(speed);
 }
 
-void RoboHeart::motor1_forward(uint8_t speed)
+void RoboHeart::motor1_forward(int speed)
 {
     motor1.forward(speed);
 }
@@ -133,12 +144,12 @@ void RoboHeart::motor2_sleep(bool sleep)
     motor2.sleep(sleep); 
 }
 
-void RoboHeart::motor2_reverse(uint8_t speed)
+void RoboHeart::motor2_reverse(int speed)
 {
     motor2.reverse(speed);
 }
 
-void RoboHeart::motor2_forward(uint8_t speed)
+void RoboHeart::motor2_forward(int speed)
 {
     motor2.forward(speed);
 }

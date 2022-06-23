@@ -36,6 +36,7 @@ class RoboHeartDRV8836
 {
     public:
         RoboHeartDRV8836();
+        RoboHeartDRV8836(Stream& debug);
         ~RoboHeartDRV8836();
         void begin(int modePin, int in1Pin, int in2Pin, int nsleepPin, Motor_DRV_t mDRV);
         void sleep(bool sleep=true);
@@ -45,8 +46,10 @@ class RoboHeartDRV8836
         void configPWM(int freq = 100000, int resolution = 8);
         void brake();
         int getSpeed();
+        int getMaxDutyCycle();
 
     private:
+        Stream* _debug;     
         int _modePin = -1;
         int _in1Pin = -1;
         int _in2Pin = -1;
@@ -57,6 +60,7 @@ class RoboHeartDRV8836
         int _pwmMaxDutyCycle = 0;
         PWM_Channel_t _in1Channel = PWM_MX_CHANNELS;
         PWM_Channel_t _in2Channel = PWM_MX_CHANNELS;
+        
 };
 
 #endif

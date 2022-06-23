@@ -50,6 +50,7 @@ class RoboHeart
 {
     public:
         RoboHeart();
+        RoboHeart(Stream& debug);
         ~RoboHeart();
 
         bool begin();
@@ -57,23 +58,23 @@ class RoboHeart
 
         void motor0_coast();   
         void motor0_sleep(bool sleep=true);
-        void motor0_reverse(uint8_t speed);
-        void motor0_forward(uint8_t speed);
+        void motor0_reverse(int speed);
+        void motor0_forward(int speed);
         void motor0_brake();
 
         void motor1_coast();
         void motor1_sleep(bool sleep=true);
-        void motor1_reverse(uint8_t speed);
-        void motor1_forward(uint8_t speed);
+        void motor1_reverse(int speed);
+        void motor1_forward(int speed);
         void motor1_brake();
 
         void motor2_coast();
         void motor2_sleep(bool sleep=true);
-        void motor2_reverse(uint8_t speed);
-        void motor2_forward(uint8_t speed);
+        void motor2_reverse(int speed);
+        void motor2_forward(int speed);
         void motor2_brake();
 
-        void handleMotorMessage(Motor_MSG_t, char* response);
+        void handleMotorMessage(Motor_MSG_t motormsg, char* response);
 
         float getTemp();
         float getAccX();
@@ -89,10 +90,10 @@ class RoboHeart
         float getAngleZ();
 
     private:
+        Stream* _debug;   
         RoboHeartDRV8836 motor0;
         RoboHeartDRV8836 motor1;
-        RoboHeartDRV8836 motor2;
-        
+        RoboHeartDRV8836 motor2;   
         
         
 };
