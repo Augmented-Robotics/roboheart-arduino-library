@@ -53,7 +53,7 @@ class RoboHeart
         RoboHeart(Stream& debug);
         ~RoboHeart();
 
-        bool begin();
+        bool begin(bool calc_mpu_offsets = true);
         void beat();
 
         void motor0_coast();   
@@ -88,6 +88,17 @@ class RoboHeart
         float getAngleX();
         float getAngleY();
         float getAngleZ();
+
+        float getGyroXoffset();
+        float getGyroYoffset();
+        float getGyroZoffset();
+
+        float getAccXoffset();
+        float getAccYoffset();
+        float getAccZoffset();        
+
+        void setGyroOffsets(float x, float y, float z);
+        void setAccOffsets(float x, float y, float z);
 
     private:
         Stream* _debug;   

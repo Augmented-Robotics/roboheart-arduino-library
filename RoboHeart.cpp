@@ -45,7 +45,7 @@ RoboHeart::~RoboHeart(void)
     //delete mpu;
 }
 
-bool RoboHeart::begin()
+bool RoboHeart::begin(bool calc_mpu_offsets)
 {
     Wire.begin();
      // MPU6050 SETUP
@@ -54,7 +54,7 @@ bool RoboHeart::begin()
     byte status = mpu.begin();
     
     Serial.println(status);
-    if(status == 0)
+    if(status == 0 && calc_mpu_offsets)
     {
         Serial.println("Calculating offsets, do not move MPU6050");
         delay(1000);
@@ -243,5 +243,16 @@ float RoboHeart::getAccAngleY(){ return mpu.getAccAngleY(); }
 float RoboHeart::getAngleX(){ return mpu.getAngleX(); }
 float RoboHeart::getAngleY(){ return mpu.getAngleY(); }
 float RoboHeart::getAngleZ(){ return mpu.getAngleZ(); }
+
+float RoboHeart::getGyroXoffset(){ return mpu.getGyroXoffset(); }
+float RoboHeart::getGyroYoffset(){ return mpu.getGyroYoffset(); }
+float RoboHeart::getGyroZoffset(){ return mpu.getGyroZoffset(); }
+
+float RoboHeart::getAccXoffset(){ return mpu.getAccXoffset(); }
+float RoboHeart::getAccYoffset(){ return mpu.getAccYoffset(); }
+float RoboHeart::getAccZoffset(){ return mpu.getAccZoffset(); }
+
+void RoboHeart::setGyroOffsets(float x, float y, float z) {return mpu.setGyroOffsets(x, y, z);}
+void RoboHeart::setAccOffsets(float x, float y, float z) {return mpu.setAccOffsets(x, y, z);}
 
 MPU6050 mpu(Wire);
