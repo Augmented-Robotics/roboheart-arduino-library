@@ -65,9 +65,9 @@ bool RoboHeart::begin(bool calc_mpu_offsets)
    
     // MOTOR SETUP
     
-    motor0.begin(GPIO_MA_MODE, GPIO_MA_PH_IN1, GPIO_MA_EN_IN2, GPIO_MA_SLEEP, M_DRIVER_A);
-    motor1.begin(GPIO_MB_MODE, GPIO_MB_PH_IN1, GPIO_MB_EN_IN2, GPIO_MB_SLEEP, M_DRIVER_B);
-    motor2.begin(GPIO_MC_MODE, GPIO_MC_PH_IN1, GPIO_MC_EN_IN2, GPIO_MC_SLEEP, M_DRIVER_C);
+    motor0.begin(GPIO_MA_MODE, GPIO_MA_PH_IN1, GPIO_MA_EN_IN2, GPIO_MA_SLEEP);
+    motor1.begin(GPIO_MB_MODE, GPIO_MB_PH_IN1, GPIO_MB_EN_IN2, GPIO_MB_SLEEP);
+    motor2.begin(GPIO_MC_MODE, GPIO_MC_PH_IN1, GPIO_MC_EN_IN2, GPIO_MC_SLEEP);
 
     return true;
 }

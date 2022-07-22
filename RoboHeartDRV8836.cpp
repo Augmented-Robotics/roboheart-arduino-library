@@ -38,20 +38,22 @@ RoboHeartDRV8836::~RoboHeartDRV8836()
    
 }
 
-void RoboHeartDRV8836::begin(int modePin, int in1Pin, int in2Pin, int nsleepPin, Motor_DRV_t mDRV)
+void RoboHeartDRV8836::begin(int modePin, int in1Pin, int in2Pin, int nsleepPin)
 { 
     _modePin = modePin;
     _nsleepPin = nsleepPin;
 
-    // PWM channel choice depends on the chosen Driver
     _in1Pin = in1Pin;
-    _in1Channel = (PWM_Channel_t)(mDRV*2); 
-    ledcAttachPin(_in1Pin, _in1Channel);
-
     _in2Pin = in2Pin;
-    _in2Channel = (PWM_Channel_t)(mDRV*2 + 1);
-    ledcAttachPin(_in2Pin, _in2Channel);
-    
+
+    // Configure the pins
+    pinMode(_in1Pin, OUTPUT);
+    pinMode(_in2Pin, OUTPUT);
+
+    // Ensure that the PWM channel has been assigned to each pin 
+    analogWrite(_in1Pin, 0);
+    analogWrite(_in2Pin, 0);
+
     // Calling only once the channels are set
     configPWM();
 
@@ -68,8 +70,9 @@ void RoboHeartDRV8836::configPWM(int freq, int resolution)
 {
     _pwmFreq = freq;
     _pwmResolution = resolution;
-    ledcSetup(_in1Channel, _pwmFreq, _pwmResolution);  
-    ledcSetup(_in2Channel, _pwmFreq, _pwmResolution); 
+
+    ledcSetup(analogGetChannel(_in1Pin), _pwmFreq, _pwmResolution);  
+    ledcSetup(analogGetChannel(_in2Pin), _pwmFreq, _pwmResolution); 
 
     _pwmMaxDutyCycle =  (int)(pow(2, _pwmResolution) - 1);
 
@@ -77,16 +80,16 @@ void RoboHeartDRV8836::configPWM(int freq, int resolution)
 
  void RoboHeartDRV8836::sleep(bool sleep)
  {
-    ledcWrite(_in1Channel, 0);
-    ledcWrite(_in2Channel, 0);
+    ledcWrite(analogGetChannel(_in1Pin), 0);
+    ledcWrite(analogGetChannel(_in2Pin), 0);
     digitalWrite(_nsleepPin,!sleep);   
  }
 
 
  void RoboHeartDRV8836::coast()
  {
-    ledcWrite(_in1Channel, 0);
-    ledcWrite(_in2Channel, 0);
+    ledcWrite(analogGetChannel(_in1Pin), 0);
+    ledcWrite(analogGetChannel(_in2Pin), 0);
  }
 
 void RoboHeartDRV8836::forward(int speed)
@@ -96,8 +99,8 @@ void RoboHeartDRV8836::forward(int speed)
     _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
     DEBUG_DRV8836("Running at speed: ");
     DEBUG_LN(_speed);
-    ledcWrite(_in2Channel, 0);
-    ledcWrite(_in1Channel, _speed);
+    ledcWrite(analogGetChannel(_in1Pin), _speed);
+    ledcWrite(analogGetChannel(_in2Pin), 0);
 }
 
 void RoboHeartDRV8836::reverse(int speed)
@@ -107,14 +110,14 @@ void RoboHeartDRV8836::reverse(int speed)
     _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
     DEBUG_DRV8836("Running at speed: ");
     DEBUG_LN(_speed);
-    ledcWrite(_in1Channel, 0);
-    ledcWrite(_in2Channel, _speed);
+    ledcWrite(analogGetChannel(_in1Pin), 0);
+    ledcWrite(analogGetChannel(_in2Pin), _speed);
 }
 
 void RoboHeartDRV8836::brake()
 {
-    ledcWrite(_in1Channel, _pwmMaxDutyCycle);
-    ledcWrite(_in2Channel, _pwmMaxDutyCycle);
+    ledcWrite(analogGetChannel(_in1Pin), _pwmMaxDutyCycle);
+    ledcWrite(analogGetChannel(_in2Pin), _pwmMaxDutyCycle);
 }
 
 int RoboHeartDRV8836::getSpeed()
