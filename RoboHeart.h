@@ -11,6 +11,7 @@
 #include <Arduino.h>
 
 #include "RoboHeartDRV8836.h"
+#include "RoboHeartStepperMotor.h"
 #include <Wire.h>
 #include <MPU6050_light.h>
 
@@ -100,13 +101,13 @@ class RoboHeart
         void setGyroOffsets(float x, float y, float z);
         void setAccOffsets(float x, float y, float z);
 
-    private:
-        Stream* _debug;   
+        RoboHeartStepperMotor stepper; 
         RoboHeartDRV8836 motor0;
         RoboHeartDRV8836 motor1;
         RoboHeartDRV8836 motor2;   
         
-        
+    private:
+        Stream* _debug;      
 };
 
 extern MPU6050 mpu;

@@ -35,7 +35,7 @@ class RoboHeartDRV8836
         int _speed = 0;
         int _pwmFreq = -1;
         int _pwmResolution = -1;
-        int _pwmMaxDutyCycle = 0;
+        int _pwmMaxDutyCycle = 256;
         
 };
 

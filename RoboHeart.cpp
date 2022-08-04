@@ -31,11 +31,10 @@
 RoboHeart::RoboHeart()
 {
     _debug = NULL;
-
 }
 
 RoboHeart::RoboHeart(Stream& debug)
-: _debug(&debug), motor0(RoboHeartDRV8836(debug)), motor1(RoboHeartDRV8836(debug)), motor2(RoboHeartDRV8836(debug))
+: _debug(&debug), motor0(RoboHeartDRV8836(debug)), motor1(RoboHeartDRV8836(debug)), motor2(RoboHeartDRV8836(debug)), stepper(RoboHeartStepperMotor(debug))
 {
     
 }
@@ -75,6 +74,8 @@ bool RoboHeart::begin(bool calc_mpu_offsets)
     motor1.begin(GPIO_MB_MODE, GPIO_MB_PH_IN1, GPIO_MB_EN_IN2, GPIO_MB_SLEEP);
     motor2.begin(GPIO_MC_MODE, GPIO_MC_PH_IN1, GPIO_MC_EN_IN2, GPIO_MC_SLEEP);
 
+    stepper.begin(&motor0, &motor1);
+    
     return true;
 }
 
