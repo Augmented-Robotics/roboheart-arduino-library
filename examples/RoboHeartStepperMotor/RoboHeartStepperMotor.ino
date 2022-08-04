@@ -22,7 +22,7 @@ void tick() {
   controlTick++;
 } 
 
-WatchdogTimer timer = WatchdogTimer(tick, CONTROL_PERIOD_US, Serial);
+PeriodicTimer timer = PeriodicTimer(tick, CONTROL_PERIOD_US, Serial);
 
 
 void setup() {

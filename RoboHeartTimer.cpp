@@ -28,7 +28,7 @@
 #define DEBUG(x) {if (_debug != NULL) {_debug->print(x);}}
 #define DEBUG_LN(x) {if (_debug != NULL) {_debug->println(x);}}
 
-WatchdogTimer::WatchdogTimer(void (*callback)(void), uint64_t timerPeriodMicroSec)
+PeriodicTimer::PeriodicTimer(void (*callback)(void), uint64_t timerPeriodMicroSec)
     : timer(timerBegin(0, 80, true)), _debug(NULL)
 {
     timerAttachInterrupt(timer, callback, true);
@@ -36,7 +36,7 @@ WatchdogTimer::WatchdogTimer(void (*callback)(void), uint64_t timerPeriodMicroSe
     disable();
 }
 
-WatchdogTimer::WatchdogTimer(void (*callback)(void), uint64_t timerPeriodMicroSec, Stream& debug)
+PeriodicTimer::PeriodicTimer(void (*callback)(void), uint64_t timerPeriodMicroSec, Stream& debug)
     : timer(timerBegin(0, 80, true)), _debug(&debug)
 {
     timerAttachInterrupt(timer, callback, true);
@@ -44,7 +44,7 @@ WatchdogTimer::WatchdogTimer(void (*callback)(void), uint64_t timerPeriodMicroSe
     disable();
 }
 
-void WatchdogTimer::setTimePeriod(uint64_t timerPeriodMicroSec) 
+void PeriodicTimer::setTimePeriod(uint64_t timerPeriodMicroSec) 
 {
     bool start_after_config = false;
 
@@ -62,14 +62,14 @@ void WatchdogTimer::setTimePeriod(uint64_t timerPeriodMicroSec)
     }    
 }
 
-void WatchdogTimer::enable() 
+void PeriodicTimer::enable() 
 {
     timerRestart(timer);
     timerAlarmEnable(timer);
     timerStart(timer);
 }
 
-void WatchdogTimer::disable() 
+void PeriodicTimer::disable() 
 {
     timerStop(timer);
     timerRestart(timer);

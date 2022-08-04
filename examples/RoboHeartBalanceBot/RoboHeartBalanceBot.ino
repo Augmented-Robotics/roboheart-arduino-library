@@ -36,7 +36,7 @@ float process_angle(float angle){
   return angle;
 }
 
-void controlLoop() {
+void tick() {
   // reduce code to minimal in order to avoid errors
   pidControlTick++;
   dcControlTick++;
@@ -49,7 +49,7 @@ void processPinInterrupt()
   targetAngleDeg = offsetAngleDeg;
 }
 
-WatchdogTimer timer = WatchdogTimer(controlLoop, CONTROL_PERIOD_US, Serial);
+PeriodicTimer timer = PeriodicTimer(tick, CONTROL_PERIOD_US, Serial);
 
 void setup() {
   Serial.begin(115200);
@@ -75,11 +75,17 @@ void setup() {
 //  Serial.print(" az ");
 //  Serial.println(heart.getAccZoffset());
     
-  prevTimeIntervalMS = millis();
-  timer.enable();
-  
   pinMode(BUTTON_PIN, INPUT);
   attachInterrupt(BUTTON_PIN, processPinInterrupt, FALLING);
+
+  // Resolve false triggering of button during flashing
+  // TODO: remove in RH rev 0.3
+  delay (100);
+  offsetAngleDeg = 0;
+  targetAngleDeg = 0;
+
+  prevTimeIntervalMS = millis();
+  timer.enable();
   
   Serial.println("Init finished");
 }

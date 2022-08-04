@@ -18,7 +18,7 @@ void wdTimerCallback() {
   wd_timer_triggered++;
 }
 
-WatchdogTimer watchdogTimer = WatchdogTimer(wdTimerCallback, WD_TIMER_PERIOD_US, Serial);
+PeriodicTimer watchdogTimer = PeriodicTimer(wdTimerCallback, WD_TIMER_PERIOD_US, Serial);
 
 // BLE
 InterfaceBLE ble = InterfaceBLE(Serial);

@@ -131,7 +131,7 @@ void RoboHeart::motor1_reverse(int speed)
 
 void RoboHeart::motor1_forward(int speed)
 {
-    motor1_forward(speed);
+    motor1.forward(speed);
 }
 
 void RoboHeart::motor1_brake()

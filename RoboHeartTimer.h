@@ -9,11 +9,11 @@
 
 #include <Arduino.h>
 
-class WatchdogTimer
+class PeriodicTimer
 {
     public:
-        WatchdogTimer(void (*callback)(void), uint64_t timerPeriodMicroSec);
-        WatchdogTimer(void (*callback)(void), uint64_t timerPeriodMicroSec, Stream& debug);
+        PeriodicTimer(void (*callback)(void), uint64_t timerPeriodMicroSec);
+        PeriodicTimer(void (*callback)(void), uint64_t timerPeriodMicroSec, Stream& debug);
         void enable();
         void disable();
         void setTimePeriod(uint64_t timerPeriodMicroSec);
