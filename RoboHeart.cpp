@@ -53,6 +53,12 @@ bool RoboHeart::begin(bool calc_mpu_offsets)
     mpu.setAddress(MPU6050_I2C_ADDR);
     byte status = mpu.begin();
     
+    if (status != 0){
+        // try one more time after a delay (MPU takes time to power-up)
+        delay(500);
+        status = mpu.begin();
+    }
+
     Serial.println(status);
     if(status == 0 && calc_mpu_offsets)
     {
