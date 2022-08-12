@@ -25,10 +25,7 @@ void RoboHeartStepperMotor::begin(RoboHeartDRV8836& motorIN1,
 
 void RoboHeartStepperMotor::executeHalfStep(int cmd,
                                             StepperDirectionType direction) {
-    if (_motorIN1 == NULL || _motorIN2 == NULL) {
-        DEBUG_LN_IDENTIFIER("Configure the struct with begin() first");
-        return;
-    }
+    RETURN_WARN_IF_EQUAL(_motorIN1, NULL)
 
     int motorAMaxDuty = _motorIN1->getMaxDutyCycle();
     int motorBMaxDuty = _motorIN2->getMaxDutyCycle();

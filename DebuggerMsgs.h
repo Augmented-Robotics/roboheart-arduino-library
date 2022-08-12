@@ -46,4 +46,20 @@
         }                       \
     }
 
+#define RETURN_WARN_IF_EQUAL(x, y)                                          \
+    {                                                                       \
+        if (x == y) {                                                       \
+            DEBUG_LN_IDENTIFIER("Configure the struct with begin() first"); \
+            return;                                                         \
+        }                                                                   \
+    }
+
+#define RETURN_VAL_WARN_IF_EQUAL(x, y, val)                                 \
+    {                                                                       \
+        if (x == y) {                                                       \
+            DEBUG_LN_IDENTIFIER("Configure the struct with begin() first"); \
+            return val;                                                     \
+        }                                                                   \
+    }
+
 #endif  // DebuggerMsgs_h

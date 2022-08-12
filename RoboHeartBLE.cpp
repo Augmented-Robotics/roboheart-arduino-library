@@ -148,30 +148,22 @@ void InterfaceBLE::setServerCallbacks(void (*onConnect)(void),
 }
 
 bool InterfaceBLE::startServiceAdvertising() {
-    if (!_configured) {
-        DEBUG_LN_IDENTIFIER(
-            "Could not start advertising, first run begin!");
-        return false;
-    }
+    RETURN_VAL_WARN_IF_EQUAL(_configured, false, false)
+
     _Advertising->start();
     return true;
 }
 
 bool InterfaceBLE::stopServiceAdvertising() {
-    if (!_configured) {
-        DEBUG_LN_IDENTIFIER("Could not stop advertising, first run begin!");
-        return false;
-    }
+    RETURN_VAL_WARN_IF_EQUAL(_configured, false, false)
+
     _Advertising->stop();
     return true;
 }
 
 bool InterfaceBLE::sendNotifyChar2(uint8_t* package) {
-    if (!_configured) {
-        DEBUG_LN_IDENTIFIER(
-            "Could not notify Characteristic 2, first run begin!");
-        return false;
-    }
+    RETURN_VAL_WARN_IF_EQUAL(_configured, false, false)
+    
     _characteristic2->setValue(package, _packageCharSize);
     _characteristic2->notify();
     return true;

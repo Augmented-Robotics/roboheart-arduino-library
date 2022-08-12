@@ -66,6 +66,8 @@ void RoboHeart::setDirectionTurnMotors(RoboHeartDRV8836& directionMotor, RoboHea
 
 char* RoboHeart::handleMotorMessage(MotorMSGType motorMSG) {
     char* response = "None";
+    RETURN_VAL_WARN_IF_EQUAL(_directionMotor, NULL, response)
+    
     switch (motorMSG.command) {
         case 1:
             _directionMotor->forward(motorMSG.speed);
