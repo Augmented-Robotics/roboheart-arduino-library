@@ -3,6 +3,7 @@ Library for the [RoboHeart Hercules Board](https://roboheart.de).
 
 Highlight of the board features:
 - ESP32 microcontroller
+- IMU - MPU6050
 - 1s Lipo Battery Full Support (charging, overcharge, overdischarge, usage as power source, reverse battery protection)
 - Three DC motors control or One Stepper motor control
 - JTAG connector Debugging
@@ -10,7 +11,7 @@ Highlight of the board features:
 - USB-C connector with Auto-program feature
 - Grove connectors for UART and I2C
 
-### Boart pinout
+### Board pinout
 
 <img src="images/RoboHeart_Hercules_PINS.jpg" width="800"/>
 
@@ -19,7 +20,7 @@ Highlight of the board features:
 1. Install ESP32 Arduino as described in [Espressif page](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html).
 
 2. Further download RoboHeart library using Git manager or through the Download ZIP option in GitHub:  
-<img src="images/Lib_installation.png" width="250"/>
+    <img src="images/Lib_installation.png" width="250"/>
 
 3. Place folder or unpack it in the default Arduino library path:
     ```

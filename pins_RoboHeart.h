@@ -10,9 +10,9 @@
 #define MOTOR_C_IN1 33  //  PHASE/IN1
 #define MOTOR_C_IN2 4   //  ENABLE/IN2
 
-#define SLEEP_MOTOR_ABC 0  //  nSLEEP //TODO: configure for ver 0.3
+#define SLEEP_MOTOR_ABC 2  //  nSLEEP 
 
-#define LED_ROBOHEART 0  // TODO: configure for ver 0.3
+#define LED_ROBOHEART 14  
 #define BUTTON_ROBOHEART 0
 
 #define IMU_SDA 21

@@ -29,7 +29,7 @@ class RoboHeartStepperMotor {
    private:
     Stream* _debug = NULL;
     RoboHeartDRV8836* _motorIN1 =
-        NULL;  // TODO: configure to use any motor, maybe motorC?
+        NULL;
     RoboHeartDRV8836* _motorIN2 = NULL;
     int command = 0;
 };
