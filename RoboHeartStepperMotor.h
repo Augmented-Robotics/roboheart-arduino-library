@@ -22,7 +22,7 @@ class RoboHeartStepperMotor {
     RoboHeartStepperMotor(Stream& debug);
     ~RoboHeartStepperMotor();
     void executeHalfStep(int cmd, StepperDirectionType direction);
-    void begin(RoboHeartDRV8836* motorIN1, RoboHeartDRV8836* motorIN2);
+    void begin(RoboHeartDRV8836& motorIN1, RoboHeartDRV8836& motorIN2);
     void stepForward();
     void stepReverse();
 

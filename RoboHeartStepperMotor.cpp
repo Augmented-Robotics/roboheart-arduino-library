@@ -17,10 +17,10 @@ RoboHeartStepperMotor::RoboHeartStepperMotor(Stream& debug) : _debug(&debug) {}
 
 RoboHeartStepperMotor::~RoboHeartStepperMotor() {}
 
-void RoboHeartStepperMotor::begin(RoboHeartDRV8836* motorIN1,
-                                  RoboHeartDRV8836* motorIN2) {
-    _motorIN1 = motorIN1;
-    _motorIN2 = motorIN2;
+void RoboHeartStepperMotor::begin(RoboHeartDRV8836& motorIN1,
+                                  RoboHeartDRV8836& motorIN2) {
+    _motorIN1 = &motorIN1;
+    _motorIN2 = &motorIN2;
 }
 
 void RoboHeartStepperMotor::executeHalfStep(int cmd,

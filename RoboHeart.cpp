@@ -50,73 +50,69 @@ bool RoboHeart::begin(bool mpuOffsetsCalc) {
     motorB.begin(MOTOR_B_IN1, MOTOR_B_IN2, SLEEP_MOTOR_ABC);
     motorC.begin(MOTOR_C_IN1, MOTOR_C_IN2, SLEEP_MOTOR_ABC);
 
-    stepper.begin(&motorA, &motorB);
+    stepper.begin(motorA, motorB);
+
+    setDirectionTurnMotors(motorC, motorB);
 
     return true;
 }
 
 void RoboHeart::beat() { mpu.update(); }
 
-void RoboHeart::handleMotorMessage(
-    MotorMSGType motorMSG,
-    char* response) {  // TODO: response not a good arduino practice
+void RoboHeart::setDirectionTurnMotors(RoboHeartDRV8836& directionMotor, RoboHeartDRV8836& turnMotor){
+    _directionMotor = &directionMotor;
+    _turnMotor = &turnMotor;
+}
+
+char* RoboHeart::handleMotorMessage(MotorMSGType motorMSG) {
+    char* response = "None";
     switch (motorMSG.command) {
         case 1:
-            // forward
-            motorC.forward(motorMSG.speed);
-            sprintf(response, "forward");
+            _directionMotor->forward(motorMSG.speed);
+            response = "forward";
             break;
         case 2:
-            // reverse
-            motorC.reverse(motorMSG.speed);
-            sprintf(response, "reverse");
+            _directionMotor->reverse(motorMSG.speed);
+            response = "reverse";
             break;
         case 3:
-            // right
-            sprintf(response, "right");
-            motorB.forward(motorMSG.steeringPower);
+            _turnMotor->forward(motorMSG.steeringPower);
+            response = "right";
             break;
         case 4:
-            // left
-            sprintf(response, "left");
-            motorB.reverse(motorMSG.steeringPower);
+            _turnMotor->reverse(motorMSG.steeringPower);
+            response = "left";
             break;
         case 5:
-            // forward and right
-            sprintf(response, "forward and right");
-            motorC.forward(motorMSG.speed);
-            motorB.forward(motorMSG.steeringPower);
+            _directionMotor->forward(motorMSG.speed);
+            _turnMotor->forward(motorMSG.steeringPower);
+            response = "forward and right";
             break;
         case 6:
-            // forward and left
-            sprintf(response, "forward and left");
-            motorC.forward(motorMSG.speed);
-            motorB.reverse(motorMSG.steeringPower);
+            _directionMotor->forward(motorMSG.speed);
+            _turnMotor->reverse(motorMSG.steeringPower);
+            response = "forward and left";
             break;
         case 7:
-            // reverse and right
-            sprintf(response, "reverse and right");
-            motorC.reverse(motorMSG.speed);
-            motorB.forward(motorMSG.steeringPower);
+            _directionMotor->reverse(motorMSG.speed);
+            _turnMotor->forward(motorMSG.steeringPower);
+            response = "reverse and right";
             break;
         case 8:
-            // reverse and left
-            sprintf(response, "reverse and left");
-            motorC.reverse(motorMSG.speed);
-            motorB.reverse(motorMSG.steeringPower);
+            _directionMotor->reverse(motorMSG.speed);
+            _turnMotor->reverse(motorMSG.steeringPower);
+            response = "reverse and left";
             break;
         case 0:
-            // STOP
-            sprintf(response, "STOP");
-            motorC.brake();
-            motorB.brake();
-
+            _directionMotor->brake();
+            _turnMotor->brake();
+            response = "STOP";
             break;
         default:
-            // STOP
-            sprintf(response, "ERROR: %d", motorMSG.command);
-            motorC.brake();
-            motorB.brake();
+            _directionMotor->brake();
+            _turnMotor->brake();
+            response = "ERROR";
             break;
     }
+    return response;
 }

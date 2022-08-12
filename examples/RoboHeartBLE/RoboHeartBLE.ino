@@ -46,8 +46,7 @@ void onWriteMotorControl(std::string value) {
         Serial.print("steeringPower: ");
         Serial.println(motorMessage.steeringPower);
 
-        char response[20];
-        heart.handleMotorMessage(motorMessage, &response[0]);
+        char *response = heart.handleMotorMessage(motorMessage);
         Serial.print("response: ");
         Serial.println(response);
 
@@ -132,7 +131,6 @@ void loop() {
         Serial.println("Stopping motors");
         MotorMSGType motorMessage = {0, 0, 0};
 
-        char response[20];
-        heart.handleMotorMessage(motorMessage, &response[0]);
+        heart.handleMotorMessage(motorMessage);
     }
 }

@@ -33,7 +33,8 @@ class RoboHeart {
     bool begin(bool mpuOffsetsCalc = true);
     void beat();
 
-    void handleMotorMessage(MotorMSGType motorMSG, char* response);
+    char* handleMotorMessage(MotorMSGType motorMSG);
+    void setDirectionTurnMotors(RoboHeartDRV8836& directionMotor, RoboHeartDRV8836& turnMotor);
 
     RoboHeartStepperMotor stepper;
     RoboHeartDRV8836 motorA;
@@ -43,6 +44,8 @@ class RoboHeart {
 
    private:
     Stream* _debug = NULL;
+    RoboHeartDRV8836* _turnMotor = NULL;
+    RoboHeartDRV8836* _directionMotor = NULL;
 };
 
 #endif
