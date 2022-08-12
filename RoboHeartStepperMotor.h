@@ -4,33 +4,33 @@
  * 	Arduino library for the RoboHeart.
  *
  */
-#ifndef _ROBOHEARTSTEPPERMOTOR_H
-#define _ROBOHEARTSTEPPERMOTOR_H
+#ifndef RoboHeartStepperMotor_h
+#define RoboHeartStepperMotor_h
 
 #include <Arduino.h>
 
 #include "RoboHeartDRV8836.h"
-#include "pins.h"
+#include "pins_RoboHeart.h"
 
 #define STEPPER_MOTOR_MAX_STEPS 8
 
-typedef enum { STEPPER_FORWARD = 0, STEPPER_REVERSE } StepperDirection_t;
+typedef enum { STEPPER_FORWARD = 0, STEPPER_REVERSE } StepperDirectionType;
 
 class RoboHeartStepperMotor {
    public:
     RoboHeartStepperMotor();
     RoboHeartStepperMotor(Stream& debug);
     ~RoboHeartStepperMotor();
-    void executeHalfStep(int cmd, StepperDirection_t direction);
-    void begin(RoboHeartDRV8836* motor0, RoboHeartDRV8836* motor1);
-    void step_forward();
-    void step_reverse();
+    void executeHalfStep(int cmd, StepperDirectionType direction);
+    void begin(RoboHeartDRV8836* motorIN1, RoboHeartDRV8836* motorIN2);
+    void stepForward();
+    void stepReverse();
 
    private:
-    Stream* _debug;
-    RoboHeartDRV8836* _motor0 =
-        NULL;  // TODO: configure to use any motor, maybe motor2?
-    RoboHeartDRV8836* _motor1 = NULL;
+    Stream* _debug = NULL;
+    RoboHeartDRV8836* _motorIN1 =
+        NULL;  // TODO: configure to use any motor, maybe motorC?
+    RoboHeartDRV8836* _motorIN2 = NULL;
     int command = 0;
 };
 

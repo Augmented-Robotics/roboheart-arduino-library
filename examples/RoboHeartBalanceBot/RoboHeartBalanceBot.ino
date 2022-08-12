@@ -12,8 +12,6 @@ RoboHeart heart = RoboHeart();
 #define Kd 0.001
 #define Ki 40
 
-#define BUTTON_PIN 0
-
 #define CONTROL_PERIOD_US 100.0
 
 #define PID_CONTROL_PRESCALER 5
@@ -33,7 +31,7 @@ unsigned long statisticsTick = 0;
 
 unsigned long prevTimeIntervalMS = 0;
 
-float process_angle(float angle) {
+float processAngle(float angle) {
     // handle -180 after crossing 180
     if (angle < -90) {
         return angle = 360 + angle;
@@ -79,8 +77,8 @@ void setup() {
     //  Serial.print(" az ");
     //  Serial.println(heart.mpu.getAccZoffset());
 
-    pinMode(BUTTON_PIN, INPUT);
-    attachInterrupt(BUTTON_PIN, processPinInterrupt, FALLING);
+    pinMode(BUTTON_ROBOHEART, INPUT);
+    attachInterrupt(BUTTON_ROBOHEART, processPinInterrupt, FALLING);
 
     // Resolve false triggering of button during flashing
     // TODO: remove in RH rev 0.3
@@ -101,7 +99,7 @@ void loop() {
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
         unsigned long curTimeIntervalMS = millis();
         pidControlTick = 0;
-        currentAngleDeg = process_angle(heart.mpu.getAngleX());
+        currentAngleDeg = processAngle(heart.mpu.getAngleX());
 
         float error = currentAngleDeg - targetAngleDeg;
         errorSum = constrain(errorSum + error, -Kp * 50, Kp * 50);
@@ -119,11 +117,11 @@ void loop() {
     if (dcControlTick >= DC_CONTROL_PRESCALER) {
         dcControlTick = 0;
         if (motorPower > 0) {
-            heart.motor0.reverse(motorPower);
-            heart.motor1.reverse(motorPower);
+            heart.motorA.reverse(motorPower);
+            heart.motorB.reverse(motorPower);
         } else if (motorPower < 0) {
-            heart.motor0.forward(-motorPower);
-            heart.motor1.forward(-motorPower);
+            heart.motorA.forward(-motorPower);
+            heart.motorB.forward(-motorPower);
         }
     }
 

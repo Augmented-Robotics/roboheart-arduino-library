@@ -11,40 +11,40 @@
     "STEPPER"  // Define identifier before including DebuggerMsgs.h
 #include "DebuggerMsgs.h"
 
-RoboHeartStepperMotor::RoboHeartStepperMotor() { _debug = NULL; }
+RoboHeartStepperMotor::RoboHeartStepperMotor() {}
 
 RoboHeartStepperMotor::RoboHeartStepperMotor(Stream& debug) : _debug(&debug) {}
 
 RoboHeartStepperMotor::~RoboHeartStepperMotor() {}
 
-void RoboHeartStepperMotor::begin(RoboHeartDRV8836* motor0,
-                                  RoboHeartDRV8836* motor1) {
-    _motor0 = motor0;
-    _motor1 = motor1;
+void RoboHeartStepperMotor::begin(RoboHeartDRV8836* motorIN1,
+                                  RoboHeartDRV8836* motorIN2) {
+    _motorIN1 = motorIN1;
+    _motorIN2 = motorIN2;
 }
 
 void RoboHeartStepperMotor::executeHalfStep(int cmd,
-                                            StepperDirection_t direction) {
-    if (_motor0 == NULL || _motor1 == NULL) {
+                                            StepperDirectionType direction) {
+    if (_motorIN1 == NULL || _motorIN2 == NULL) {
         DEBUG_LN_IDENTIFIER("Configure the struct with begin() first");
         return;
     }
 
-    int motor0MaxDuty = _motor0->getMaxDutyCycle();
-    int motor1MaxDuty = _motor1->getMaxDutyCycle();
+    int motorAMaxDuty = _motorIN1->getMaxDutyCycle();
+    int motorBMaxDuty = _motorIN2->getMaxDutyCycle();
 
-    float entry_ratio = 1.;
-    float exit_ratio = 1.;
-    float peak_ratio = 1.;
+    float entryRatio = 1.;
+    float exitRatio = 1.;
+    float peakRatio = 1.;
 
     // Creating smoother transitions with PWM
     // thanks to the inductance and resistance of the coils
     // if (direction == STEPPER_FORWARD){
-    //     entry_ratio = 57./64.;
-    //     exit_ratio = 41./64.;
+    //     entryRatio = 57./64.;
+    //     exitRatio = 41./64.;
     // } else if (direction == STEPPER_REVERSE){
-    //     entry_ratio = 41./64.;
-    //     exit_ratio = 57./64.;
+    //     entryRatio = 41./64.;
+    //     exitRatio = 57./64.;
     // }
 
     // 8 half-steps
@@ -54,51 +54,51 @@ void RoboHeartStepperMotor::executeHalfStep(int cmd,
     switch (cmd) {
         case 0:
             /* A+ */
-            _motor0->forward(peak_ratio * motor0MaxDuty);
+            _motorIN1->forward(peakRatio * motorAMaxDuty);
             /* B0 */
-            _motor1->sleep(false);
+            _motorIN2->sleep(false);
             break;
         case 1:
             /* A+ */
-            _motor0->forward(exit_ratio * motor0MaxDuty);
+            _motorIN1->forward(exitRatio * motorAMaxDuty);
             /* B+ */
-            _motor1->forward(entry_ratio * motor1MaxDuty);
+            _motorIN2->forward(entryRatio * motorBMaxDuty);
             break;
         case 2:
             /* A0 */
-            _motor0->sleep(false);
+            _motorIN1->sleep(false);
             /* B+ */
-            _motor1->forward(peak_ratio * motor1MaxDuty);
+            _motorIN2->forward(peakRatio * motorBMaxDuty);
             break;
         case 3:
             /* A- */
-            _motor0->reverse(entry_ratio * motor0MaxDuty);
+            _motorIN1->reverse(entryRatio * motorAMaxDuty);
             /* B+ */
-            _motor1->forward(exit_ratio * motor1MaxDuty);
+            _motorIN2->forward(exitRatio * motorBMaxDuty);
             break;
         case 4:
             /* A- */
-            _motor0->reverse(peak_ratio * motor0MaxDuty);
+            _motorIN1->reverse(peakRatio * motorAMaxDuty);
             /* B0 */
-            _motor1->sleep(false);
+            _motorIN2->sleep(false);
             break;
         case 5:
             /* A- */
-            _motor0->reverse(exit_ratio * motor0MaxDuty);
+            _motorIN1->reverse(exitRatio * motorAMaxDuty);
             /* B- */
-            _motor1->reverse(entry_ratio * motor1MaxDuty);
+            _motorIN2->reverse(entryRatio * motorBMaxDuty);
             break;
         case 6:
             /* A0 */
-            _motor0->sleep(false);
+            _motorIN1->sleep(false);
             /* B- */
-            _motor1->reverse(peak_ratio * motor1MaxDuty);
+            _motorIN2->reverse(peakRatio * motorBMaxDuty);
             break;
         case 7:
             /* A+ */
-            _motor0->forward(entry_ratio * motor0MaxDuty);
+            _motorIN1->forward(entryRatio * motorAMaxDuty);
             /* B- */
-            _motor1->reverse(exit_ratio * motor1MaxDuty);
+            _motorIN2->reverse(exitRatio * motorBMaxDuty);
             break;
 
         default:
@@ -108,7 +108,7 @@ void RoboHeartStepperMotor::executeHalfStep(int cmd,
     }
 }
 
-void RoboHeartStepperMotor::step_forward() {
+void RoboHeartStepperMotor::stepForward() {
     command++;
     if (command >= STEPPER_MOTOR_MAX_STEPS) {
         command = 0;
@@ -117,7 +117,7 @@ void RoboHeartStepperMotor::step_forward() {
     executeHalfStep(command, STEPPER_FORWARD);
 }
 
-void RoboHeartStepperMotor::step_reverse() {
+void RoboHeartStepperMotor::stepReverse() {
     command--;
     if (command < 0) {
         command = STEPPER_MOTOR_MAX_STEPS - 1;

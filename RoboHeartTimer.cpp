@@ -13,7 +13,7 @@
 
 PeriodicTimer::PeriodicTimer(void (*callback)(void),
                              uint64_t timerPeriodMicroSec)
-    : timer(timerBegin(0, 80, true)), _debug(NULL) {
+    : timer(timerBegin(0, 80, true)) {
     timerAttachInterrupt(timer, callback, true);
     setTimePeriod(timerPeriodMicroSec);
     disable();
@@ -28,10 +28,10 @@ PeriodicTimer::PeriodicTimer(void (*callback)(void),
 }
 
 void PeriodicTimer::setTimePeriod(uint64_t timerPeriodMicroSec) {
-    bool start_after_config = false;
+    bool startAfterConfig = false;
 
     if (timerStarted(timer)) {
-        start_after_config = true;
+        startAfterConfig = true;
         timerStop(timer);
     }
 
@@ -39,7 +39,7 @@ void PeriodicTimer::setTimePeriod(uint64_t timerPeriodMicroSec) {
 
     timerRestart(timer);
 
-    if (start_after_config) {
+    if (startAfterConfig) {
         timerStart(timer);
     }
 }

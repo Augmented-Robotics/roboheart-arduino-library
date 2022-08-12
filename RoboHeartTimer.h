@@ -5,8 +5,8 @@
  *
  */
 
-#ifndef _ROBOHEARTTIMER_H
-#define _ROBOHEARTTIMER_H
+#ifndef RoboHeartTimer_h
+#define RoboHeartTimer_h
 
 #include <Arduino.h>
 
@@ -20,8 +20,8 @@ class PeriodicTimer {
     void setTimePeriod(uint64_t timerPeriodMicroSec);
 
    private:
-    Stream* _debug;
+    Stream* _debug = NULL;
     hw_timer_t* timer;
 };
 
-#endif  // _ROBOHEARTTIMER_H
+#endif  // RoboHeartTimer_h

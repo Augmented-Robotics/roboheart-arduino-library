@@ -41,9 +41,9 @@ void loop() {
         controlTick = 0;
         steps++;
         if (direction == STEPPER_FORWARD) {
-            heart.stepper.step_forward();
+            heart.stepper.stepForward();
         } else if (direction == STEPPER_REVERSE) {
-            heart.stepper.step_reverse();
+            heart.stepper.stepReverse();
         } else {
             Serial.println("Direction has invalid value");
         }

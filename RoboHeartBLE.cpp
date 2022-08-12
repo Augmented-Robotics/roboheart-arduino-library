@@ -15,21 +15,21 @@
     "BLE"  // Define identifier before including DebuggerMsgs.h
 #include "DebuggerMsgs.h"
 
-static BLE_UUID_Config_t uuids = {
-    RH_APP_SERVICE_UUID, RH_APP_CHARACTERISTIC_UUID1,
-    RH_APP_CHARACTERISTIC_UUID2, RH_APP_CHARACTERISTIC_UUID3};
+static uuidConfigType uuids = {RH_APP_SERVICE_UUID, RH_APP_CHARACTERISTIC_UUID1,
+                               RH_APP_CHARACTERISTIC_UUID2,
+                               RH_APP_CHARACTERISTIC_UUID3};
 
-BLE_UUID_Config_t* InterfaceBLE::ble_uuids = &uuids;
+uuidConfigType* InterfaceBLE::_uuidsBLE = &uuids;
 
-void (*InterfaceBLE::char1writeCallback)(std::string) = NULL;
-void (*InterfaceBLE::char2writeCallback)(std::string) = NULL;
-void (*InterfaceBLE::char3writeCallback)(std::string) = NULL;
+void (*InterfaceBLE::char1WriteCallback)(std::string) = NULL;
+void (*InterfaceBLE::char2WriteCallback)(std::string) = NULL;
+void (*InterfaceBLE::char3WriteCallback)(std::string) = NULL;
 void (*InterfaceBLE::serverOnConnectCallback)(void) = NULL;
 void (*InterfaceBLE::serverOnDisconnectCallback)(void) = NULL;
 
-InterfaceBLE::InterfaceBLE(Stream& debug) : _debug(&debug), configured(false) {}
+InterfaceBLE::InterfaceBLE(Stream& debug) : _debug(&debug) {}
 
-InterfaceBLE::InterfaceBLE() : _debug(NULL), configured(false) {}
+InterfaceBLE::InterfaceBLE() {}
 
 void InterfaceBLE::serverOnConnectInvCallback() {
     if (serverOnConnectCallback != NULL) {
@@ -44,12 +44,12 @@ void InterfaceBLE::serverOnDisconnectInvCallback() {
 }
 
 void InterfaceBLE::charOnWriteInvCallback(std::string uuid, std::string value) {
-    if (uuid == ble_uuids->char1 && char1writeCallback != NULL) {
-        char1writeCallback(value);
-    } else if (uuid == ble_uuids->char2 && char2writeCallback != NULL) {
-        char2writeCallback(value);
-    } else if (uuid == ble_uuids->char3 && char3writeCallback != NULL) {
-        char3writeCallback(value);
+    if (uuid == _uuidsBLE->char1 && char1WriteCallback != NULL) {
+        char1WriteCallback(value);
+    } else if (uuid == _uuidsBLE->char2 && char2WriteCallback != NULL) {
+        char2WriteCallback(value);
+    } else if (uuid == _uuidsBLE->char3 && char3WriteCallback != NULL) {
+        char3WriteCallback(value);
     }
 }
 
@@ -70,69 +70,69 @@ class ServerCallbacks : public BLEServerCallbacks {
     };
 };
 
-void InterfaceBLE::configure(uint8_t* package, uint8_t package_size,
-                             BLE_UUID_Config_t* config_uuids) {
+void InterfaceBLE::configure(uint8_t* package, uint8_t packageSize,
+                             uuidConfigType* uuidsConfig) {
     DEBUG_LN_IDENTIFIER("Initialization");
     BLEDevice::init("ESP_GATT_SERVER");
-    pServer = BLEDevice::createServer();
+    _Server = BLEDevice::createServer();
 
-    if (config_uuids != NULL) {
-        ble_uuids = config_uuids;
+    if (uuidsConfig != NULL) {
+        _uuidsBLE = uuidsConfig;
     }
-    packageCharSize = package_size;
+    _packageCharSize = packageSize;
 
-    BLEService* pService = pServer->createService(ble_uuids->service);
+    BLEService* pService = _Server->createService(_uuidsBLE->service);
     DEBUG_IDENTIFIER("Service UUID: ");
     DEBUG_LN(pService->getUUID().toString().c_str());
 
-    pServer->setCallbacks(new ServerCallbacks());
+    _Server->setCallbacks(new ServerCallbacks());
 
-    pCharacteristic1 = pService->createCharacteristic(
-        ble_uuids->char1,
+    _characteristic1 = pService->createCharacteristic(
+        _uuidsBLE->char1,
         BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
 
-    pCharacteristic1->setCallbacks(new CharacteristicCallbacks());
+    _characteristic1->setCallbacks(new CharacteristicCallbacks());
     DEBUG_IDENTIFIER("Characteristic1 UUID: ");
-    DEBUG_LN(pCharacteristic1->getUUID().toString().c_str());
+    DEBUG_LN(_characteristic1->getUUID().toString().c_str());
 
-    pCharacteristic2 = pService->createCharacteristic(
-        ble_uuids->char2, BLECharacteristic::PROPERTY_READ |
+    _characteristic2 = pService->createCharacteristic(
+        _uuidsBLE->char2, BLECharacteristic::PROPERTY_READ |
                               BLECharacteristic::PROPERTY_WRITE |
                               BLECharacteristic::PROPERTY_NOTIFY);
-    pCharacteristic2->addDescriptor(new BLE2902());
+    _characteristic2->addDescriptor(new BLE2902());
 
-    pCharacteristic2->setCallbacks(new CharacteristicCallbacks());
+    _characteristic2->setCallbacks(new CharacteristicCallbacks());
 
     DEBUG_IDENTIFIER("Characteristic2 UUID: ");
-    DEBUG_LN(pCharacteristic2->getUUID().toString().c_str());
+    DEBUG_LN(_characteristic2->getUUID().toString().c_str());
 
-    pCharacteristic3 = pService->createCharacteristic(
-        ble_uuids->char3,
+    _characteristic3 = pService->createCharacteristic(
+        _uuidsBLE->char3,
         BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
 
-    pCharacteristic3->setCallbacks(new CharacteristicCallbacks());
+    _characteristic3->setCallbacks(new CharacteristicCallbacks());
 
     DEBUG_IDENTIFIER("Characteristic3 UUID: ");
-    DEBUG_LN(pCharacteristic3->getUUID().toString().c_str());
+    DEBUG_LN(_characteristic3->getUUID().toString().c_str());
 
-    pCharacteristic1->setValue(package, packageCharSize);
-    pCharacteristic2->setValue(package, packageCharSize);
-    pCharacteristic3->setValue(package, packageCharSize);
+    _characteristic1->setValue(package, _packageCharSize);
+    _characteristic2->setValue(package, _packageCharSize);
+    _characteristic3->setValue(package, _packageCharSize);
     pService->start();
 
-    pAdvertising = pServer->getAdvertising();
+    _Advertising = _Server->getAdvertising();
 
-    pAdvertising->addServiceUUID(ble_uuids->service);
+    _Advertising->addServiceUUID(_uuidsBLE->service);
 
-    configured = true;
+    _configured = true;
 }
 
 void InterfaceBLE::setCharacteristicsCallbacks(
-    void (*char1write)(std::string), void (*char2write)(std::string),
-    void (*char3write)(std::string)) {
-    char1writeCallback = char1write;
-    char2writeCallback = char2write;
-    char3writeCallback = char3write;
+    void (*char1Write)(std::string), void (*char2Write)(std::string),
+    void (*char3Write)(std::string)) {
+    char1WriteCallback = char1Write;
+    char2WriteCallback = char2Write;
+    char3WriteCallback = char3Write;
 }
 void InterfaceBLE::setServerCallbacks(void (*onConnect)(void),
                                       void (*onDisconnect)(void)) {
@@ -140,32 +140,32 @@ void InterfaceBLE::setServerCallbacks(void (*onConnect)(void),
     serverOnDisconnectCallback = onDisconnect;
 }
 
-bool InterfaceBLE::StartServiceAdvertising() {
-    if (!configured) {
+bool InterfaceBLE::startServiceAdvertising() {
+    if (!_configured) {
         DEBUG_LN_IDENTIFIER(
             "Could not start advertising, first configure ble!");
         return false;
     }
-    pAdvertising->start();
+    _Advertising->start();
     return true;
 }
 
-bool InterfaceBLE::StopServiceAdvertising() {
-    if (!configured) {
+bool InterfaceBLE::stopServiceAdvertising() {
+    if (!_configured) {
         DEBUG_LN_IDENTIFIER("Could not stop advertising, first configure ble!");
         return false;
     }
-    pAdvertising->stop();
+    _Advertising->stop();
     return true;
 }
 
 bool InterfaceBLE::sendNotifyChar2(uint8_t* package) {
-    if (!configured) {
+    if (!_configured) {
         DEBUG_LN_IDENTIFIER(
             "Could not notify Characteristic 2, first configure ble!");
         return false;
     }
-    pCharacteristic2->setValue(package, packageCharSize);
-    pCharacteristic2->notify();
+    _characteristic2->setValue(package, _packageCharSize);
+    _characteristic2->notify();
     return true;
 }

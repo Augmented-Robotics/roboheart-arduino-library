@@ -21,15 +21,13 @@ int clampSpeed(int speed, int minSpeed, int maxSpeed) {
     }
 }
 
-RoboHeartDRV8836::RoboHeartDRV8836() { _debug = NULL; }
+RoboHeartDRV8836::RoboHeartDRV8836() {}
 RoboHeartDRV8836::RoboHeartDRV8836(Stream& debug) : _debug(&debug) {}
 
 RoboHeartDRV8836::~RoboHeartDRV8836() {}
 
-void RoboHeartDRV8836::begin(int modePin, int in1Pin, int in2Pin,
-                             int nsleepPin) {
-    _modePin = modePin;
-    _nsleepPin = nsleepPin;
+void RoboHeartDRV8836::begin(int in1Pin, int in2Pin, int nsleepPin) {
+    _nSleepPin = nsleepPin;
 
     _in1Pin = in1Pin;
     _in2Pin = in2Pin;
@@ -45,13 +43,9 @@ void RoboHeartDRV8836::begin(int modePin, int in1Pin, int in2Pin,
     // Calling only once the channels are set
     configPWM();
 
-    // MODE PIN LOW --> IN/IN MODE
-    // MODE PIN HIGH --> PHASE/ENABLE MODE
-    // WE USE IN/IN MODE, BECAUSE IT SUPPORTS COASTING
-    pinMode(_modePin, OUTPUT);  //  MODE
-    digitalWrite(_modePin, LOW);
-    pinMode(_nsleepPin, OUTPUT);  //  nSLEEP
-    digitalWrite(_nsleepPin, HIGH);
+    // IN/IN MODE BY DEFAULT, IT SUPPORTS COASTING
+    pinMode(_nSleepPin, OUTPUT);  //  nSLEEP
+    digitalWrite(_nSleepPin, HIGH);
 }
 
 void RoboHeartDRV8836::configPWM(int freq, int resolution) {
@@ -67,7 +61,7 @@ void RoboHeartDRV8836::configPWM(int freq, int resolution) {
 void RoboHeartDRV8836::sleep(bool sleep) {
     ledcWrite(analogGetChannel(_in1Pin), 0);
     ledcWrite(analogGetChannel(_in2Pin), 0);
-    digitalWrite(_nsleepPin, !sleep);
+    digitalWrite(_nSleepPin, !sleep);
 }
 
 void RoboHeartDRV8836::coast() {

@@ -4,8 +4,8 @@
  * 	Arduino library for the RoboHeart.
  *
  */
-#ifndef _ROBOHEARTBLE_H
-#define _ROBOHEARTBLE_H
+#ifndef RoboHeartBLE_h
+#define RoboHeartBLE_h
 
 #include <Arduino.h>
 #include <BLEAdvertising.h>
@@ -22,7 +22,7 @@ typedef struct {
     std::string char1;
     std::string char2;
     std::string char3;
-} BLE_UUID_Config_t;
+} uuidConfigType;
 
 class InterfaceBLE {
    public:
@@ -33,38 +33,37 @@ class InterfaceBLE {
     static void serverOnDisconnectInvCallback();
     static void charOnWriteInvCallback(std::string uuid, std::string value);
 
-    void configure(uint8_t* package, uint8_t package_size,
-                   BLE_UUID_Config_t* config_uuids = NULL);
+    void configure(uint8_t* package, uint8_t packageSize,
+                   uuidConfigType* uuidsConfig = NULL);
 
-    void setCharacteristicsCallbacks(void (*char1write)(std::string),
-                                     void (*char2write)(std::string),
-                                     void (*char3write)(std::string));
+    void setCharacteristicsCallbacks(void (*char1Write)(std::string),
+                                     void (*char2Write)(std::string),
+                                     void (*char3Write)(std::string));
     void setServerCallbacks(void (*onConnect)(void),
                             void (*onDisconnect)(void));
 
-    bool StartServiceAdvertising();
-    bool StopServiceAdvertising();
+    bool startServiceAdvertising();
+    bool stopServiceAdvertising();
     bool sendNotifyChar2(uint8_t* package);
 
    private:
-    static BLE_UUID_Config_t* ble_uuids;
+    static uuidConfigType* _uuidsBLE;
 
-    static void (*char1writeCallback)(std::string);
-    static void (*char2writeCallback)(std::string);
-    static void (*char3writeCallback)(std::string);
+    static void (*char1WriteCallback)(std::string);
+    static void (*char2WriteCallback)(std::string);
+    static void (*char3WriteCallback)(std::string);
     static void (*serverOnConnectCallback)(void);
     static void (*serverOnDisconnectCallback)(void);
 
-    BLEServer* pServer;
-    BLEAdvertising* pAdvertising;
-    BLECharacteristic* pCharacteristic1;
-    BLECharacteristic* pCharacteristic2;
-    BLECharacteristic* pCharacteristic3;
+    BLEServer* _Server;
+    BLEAdvertising* _Advertising;
+    BLECharacteristic* _characteristic1;
+    BLECharacteristic* _characteristic2;
+    BLECharacteristic* _characteristic3;
 
-    Stream* _debug;
-    hw_timer_t* timer;
-    uint8_t packageCharSize;
-    bool configured;
+    Stream* _debug = NULL;
+    uint8_t _packageCharSize;
+    bool _configured = false;
 };
 
-#endif  // _ROBOHEARTBLE_H
+#endif  // RoboHeartBLE_h

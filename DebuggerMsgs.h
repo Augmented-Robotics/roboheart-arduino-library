@@ -5,8 +5,8 @@
  *
  */
 
-#ifndef _DEBUGGERMSGS_H
-#define _DEBUGGERMSGS_H
+#ifndef DebuggerMsgs_h
+#define DebuggerMsgs_h
 
 #ifndef FILE_IDENTIFIER
 #define FILE_IDENTIFIER ""
@@ -46,4 +46,4 @@
         }                       \
     }
 
-#endif  // _DEBUGGERMSGS_H
+#endif  // DebuggerMsgs_h

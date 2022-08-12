@@ -4,19 +4,19 @@
  * 	Arduino library for the RoboHeart.
  *
  */
-#ifndef _ROBOHEARTDRV8836_H
-#define _ROBOHEARTDRV8836_H
+#ifndef RoboHeartDRV8836_h
+#define RoboHeartDRV8836_h
 
 #include <Arduino.h>
 
-#include "pins.h"
+#include "pins_RoboHeart.h"
 
 class RoboHeartDRV8836 {
    public:
     RoboHeartDRV8836();
     RoboHeartDRV8836(Stream& debug);
     ~RoboHeartDRV8836();
-    void begin(int modePin, int in1Pin, int in2Pin, int nsleepPin);
+    void begin(int in1Pin, int in2Pin, int nsleepPin);
     void sleep(bool sleep = true);
     void coast();
     void forward(int speed);
@@ -27,11 +27,10 @@ class RoboHeartDRV8836 {
     int getMaxDutyCycle();
 
    private:
-    Stream* _debug;
-    int _modePin = -1;
+    Stream* _debug = NULL;
     int _in1Pin = -1;
     int _in2Pin = -1;
-    int _nsleepPin = -1;
+    int _nSleepPin = -1;
     int _speed = 0;
     int _pwmFreq = -1;
     int _pwmResolution = -1;

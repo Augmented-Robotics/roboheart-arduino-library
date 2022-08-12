@@ -14,20 +14,20 @@ void setup() {
 }
 
 void loop() {
-    Serial.println("Motor0");
-    heart.motor0.reverse(100);
+    Serial.println("motorA");
+    heart.motorA.reverse(100);
     delay(5000);
-    heart.motor0.coast();
+    heart.motorA.coast();
 
-    Serial.println("Motor1");
-    heart.motor1.reverse(127);
+    Serial.println("motorB");
+    heart.motorB.reverse(127);
     delay(5000);
-    heart.motor1.coast();
+    heart.motorB.coast();
 
-    Serial.println("Motor2");
-    heart.motor2.reverse(255);
+    Serial.println("motorC");
+    heart.motorC.reverse(255);
     delay(5000);
-    heart.motor2.coast();
+    heart.motorC.coast();
 
     heart.beat();
 }

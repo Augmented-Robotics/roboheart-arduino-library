@@ -17,8 +17,6 @@ RoboHeart heart = RoboHeart();
 #define Kd 0.001
 #define Ki 40
 
-#define BUTTON_PIN 0
-
 #define CONTROL_PERIOD_US 100.0
 
 #define PID_CONTROL_PRESCALER 5
@@ -38,8 +36,8 @@ float currentAngleDeg = 0;
 float offsetMotorPower = 0;
 float targetAngleDeg = 0.;
 float offsetAngleDeg = 0.;
-float turnmotor0 = 1.;
-float turnmotor1 = 1.;
+float turnMotorA = 1.;
+float turnMotorB = 1.;
 
 unsigned long pidControlTick = 0;
 unsigned long dcControlTick = 0;
@@ -53,7 +51,7 @@ static uint8_t packageBle[4] = {0x11, 0x22, 0x33, 0x44};
 volatile bool bleDeviceConnected = false;
 bool bleConnUpdated = false;
 
-void setup_direction(bool dir) {
+void setupDirection(bool dir) {
     if (dir == MOTOR_FORWARD) {
         targetAngleDeg = offsetAngleDeg - 5;
         offsetMotorPower = 50;
@@ -63,42 +61,42 @@ void setup_direction(bool dir) {
     }
 }
 
-void setup_turn(int dir) {
+void setupTurn(int dir) {
     if (dir == MOTOR_LEFT) {
-        turnmotor0 = 1.5;
-        turnmotor1 = 1.;
+        turnMotorA = 1.5;
+        turnMotorB = 1.;
     } else if (dir == MOTOR_RIGHT) {
-        turnmotor0 = 1.;
-        turnmotor1 = 1.5;
+        turnMotorA = 1.;
+        turnMotorB = 1.5;
     }
 }
 
-void reset_control() {
+void resetControl() {
     offsetMotorPower = 0;
     targetAngleDeg = offsetAngleDeg;
-    turnmotor0 = 1.;
-    turnmotor1 = 1.;
+    turnMotorA = 1.;
+    turnMotorB = 1.;
 }
 
 void onWriteMotorControl(std::string value) {
     if (value.length() == 3) {
         wdTimerTick = 0;
 
-        Motor_MSG_t motor_message = {value[0], 3 * int(value[1]),
+        MotorMSGType motorMessage = {value[0], 3 * int(value[1]),
                                      3 * int(value[2])};
 
-        switch (motor_message.command) {
+        switch (motorMessage.command) {
             case 1:
                 // forward
-                setup_direction(MOTOR_FORWARD);
-                turnmotor0 = 1.;
-                turnmotor1 = 1.;
+                setupDirection(MOTOR_FORWARD);
+                turnMotorA = 1.;
+                turnMotorB = 1.;
                 break;
             case 2:
                 // reverse
-                setup_direction(MOTOR_REVERSE);
-                turnmotor0 = 1.;
-                turnmotor1 = 1.;
+                setupDirection(MOTOR_REVERSE);
+                turnMotorA = 1.;
+                turnMotorB = 1.;
                 break;
             case 3:
                 // right
@@ -108,43 +106,43 @@ void onWriteMotorControl(std::string value) {
                 break;
             case 5:
                 // forward and right
-                setup_direction(MOTOR_FORWARD);
-                setup_turn(MOTOR_RIGHT);
+                setupDirection(MOTOR_FORWARD);
+                setupTurn(MOTOR_RIGHT);
                 break;
             case 6:
                 // forward and left
-                setup_direction(MOTOR_FORWARD);
-                setup_turn(MOTOR_LEFT);
+                setupDirection(MOTOR_FORWARD);
+                setupTurn(MOTOR_LEFT);
                 break;
             case 7:
                 // reverse and right
-                setup_direction(MOTOR_REVERSE);
-                setup_turn(MOTOR_RIGHT);
+                setupDirection(MOTOR_REVERSE);
+                setupTurn(MOTOR_RIGHT);
                 break;
             case 8:
                 // reverse and left
-                setup_direction(MOTOR_REVERSE);
-                setup_turn(MOTOR_LEFT);
+                setupDirection(MOTOR_REVERSE);
+                setupTurn(MOTOR_LEFT);
                 break;
             case 0:
                 // stop
-                reset_control();
+                resetControl();
                 break;
         }
     }
 }
 
-void BLEdisconnected() {
+void bleDisconnected() {
     bleConnUpdated = false;
     bleDeviceConnected = false;
 }
 
-void BLEconnected() {
+void bleConnected() {
     bleConnUpdated = false;
     bleDeviceConnected = true;
 }
 
-float process_angle(float angle) {
+float processAngle(float angle) {
     // handle -180 after crossing 180
     if (angle < -90) {
         return angle = 360 + angle;
@@ -195,12 +193,12 @@ void setup() {
     // ble configuration
     ble.configure(packageBle, sizeof(packageBle));
 
-    ble.setServerCallbacks(BLEconnected, BLEdisconnected);
+    ble.setServerCallbacks(bleConnected, bleDisconnected);
     ble.setCharacteristicsCallbacks(onWriteMotorControl, NULL, NULL);
-    ble.StartServiceAdvertising();
+    ble.startServiceAdvertising();
 
-    pinMode(BUTTON_PIN, INPUT);
-    attachInterrupt(BUTTON_PIN, processPinInterrupt, FALLING);
+    pinMode(BUTTON_ROBOHEART, INPUT);
+    attachInterrupt(BUTTON_ROBOHEART, processPinInterrupt, FALLING);
 
     // Resolve false triggering of button during flashing
     // TODO: remove in RH rev 0.3
@@ -221,7 +219,7 @@ void loop() {
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
         unsigned long curTimeIntervalMS = millis();
         pidControlTick = 0;
-        currentAngleDeg = process_angle(heart.mpu.getAngleX());
+        currentAngleDeg = processAngle(heart.mpu.getAngleX());
 
         float error = currentAngleDeg - targetAngleDeg;
         errorSum = constrain(errorSum + error, -Kp * 50, Kp * 50);
@@ -239,23 +237,23 @@ void loop() {
     if (dcControlTick >= DC_CONTROL_PRESCALER) {
         dcControlTick = 0;
         if (motorPower > 0) {
-            heart.motor0.reverse(turnmotor0 * (motorPower + offsetMotorPower));
-            heart.motor1.reverse(turnmotor1 * (motorPower + offsetMotorPower));
+            heart.motorA.reverse(turnMotorA * (motorPower + offsetMotorPower));
+            heart.motorB.reverse(turnMotorB * (motorPower + offsetMotorPower));
         } else if (motorPower < 0) {
-            heart.motor0.forward(turnmotor0 * (-motorPower - offsetMotorPower));
-            heart.motor1.forward(turnmotor1 * (-motorPower - offsetMotorPower));
+            heart.motorA.forward(turnMotorA * (-motorPower - offsetMotorPower));
+            heart.motorB.forward(turnMotorB * (-motorPower - offsetMotorPower));
         }
     }
 
     // Activate safety timer every CONTROL_PERIOD_US*WD_TIMER_PRESCALER
     if (wdTimerTick >= WD_TIMER_PRESCALER) {
         wdTimerTick = 0;
-        reset_control();
+        resetControl();
     }
 
     if (!bleDeviceConnected && !bleConnUpdated) {
         // BLE disconnecting
-        ble.StartServiceAdvertising();
+        ble.startServiceAdvertising();
         Serial.println("Disconnected, start advertising");
         bleConnUpdated = true;
         motorPower = 0;
