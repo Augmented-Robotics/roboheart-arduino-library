@@ -6,7 +6,7 @@
 #include <RoboHeartBLE.h>
 #include <RoboHeartTimer.h>
 
-RoboHeart heart = RoboHeart();
+RoboHeart heart = RoboHeart(Serial);
 
 // Example of the package that can be transmited with BLE
 static uint8_t blePackage[4] = {0x11, 0x22, 0x33, 0x44};

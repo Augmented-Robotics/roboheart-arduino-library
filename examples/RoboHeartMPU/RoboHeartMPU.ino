@@ -7,7 +7,7 @@
 
 unsigned long prevPrintTime = 0;
 
-RoboHeart heart = RoboHeart();
+RoboHeart heart = RoboHeart(Serial);
 
 void setup() {
     Serial.begin(115200);

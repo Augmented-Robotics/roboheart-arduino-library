@@ -77,31 +77,21 @@ void RoboHeartDRV8836::coast() {
 
 void RoboHeartDRV8836::forward(int speed) {
     RETURN_WARN_IF_EQUAL(_in1Pin, -1)
-
-    DEBUG_IDENTIFIER("Received speed: ");
-    DEBUG_LN(speed);
     _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
-    DEBUG_IDENTIFIER("Running at speed: ");
-    DEBUG_LN(_speed);
     ledcWrite(analogGetChannel(_in1Pin), _speed);
     ledcWrite(analogGetChannel(_in2Pin), 0);
 }
 
 void RoboHeartDRV8836::reverse(int speed) {
     RETURN_WARN_IF_EQUAL(_in1Pin, -1)
-
-    DEBUG_IDENTIFIER("Received speed: ");
-    DEBUG_LN(speed);
     _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
-    DEBUG_IDENTIFIER("Running at speed: ");
-    DEBUG_LN(_speed);
     ledcWrite(analogGetChannel(_in1Pin), 0);
     ledcWrite(analogGetChannel(_in2Pin), _speed);
 }
 
 void RoboHeartDRV8836::brake() {
     RETURN_WARN_IF_EQUAL(_in1Pin, -1)
-    
+
     ledcWrite(analogGetChannel(_in1Pin), _pwmMaxDutyCycle);
     ledcWrite(analogGetChannel(_in2Pin), _pwmMaxDutyCycle);
 }

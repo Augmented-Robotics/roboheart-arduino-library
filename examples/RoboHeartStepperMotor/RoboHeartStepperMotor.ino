@@ -5,11 +5,11 @@
 #include <RoboHeart.h>
 #include <RoboHeartTimer.h>
 
-RoboHeart heart = RoboHeart();
+RoboHeart heart = RoboHeart(Serial);
 
 #define CONTROL_TICK_PERIOD_US 100  // Control tick period in micro-seconds
 #define STEPPER_CONTROL_PRESCALER \
-    25  // Control ticks pasing before Stepper Motor Control
+    25  // Control ticks passing before Stepper Motor Control
 #define MOTOR_STEPS_FULL_ROTATION \
     230  // Stepper steps before achieving one full rotation
 

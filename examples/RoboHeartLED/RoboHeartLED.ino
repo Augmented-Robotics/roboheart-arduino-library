@@ -4,7 +4,7 @@
 
 #include <RoboHeart.h>
 
-RoboHeart heart = RoboHeart();
+RoboHeart heart = RoboHeart(Serial);
 bool ledState = HIGH; // Save LED state
 
 void setup() {

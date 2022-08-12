@@ -4,7 +4,7 @@
 
 #include <RoboHeart.h>
 
-RoboHeart heart = RoboHeart();
+RoboHeart heart = RoboHeart(Serial);
 
 void setup() {
     Serial.begin(115200);

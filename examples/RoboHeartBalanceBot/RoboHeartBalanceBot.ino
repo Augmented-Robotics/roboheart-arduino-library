@@ -9,7 +9,7 @@
 #include <RoboHeart.h>
 #include <RoboHeartTimer.h>
 
-RoboHeart heart = RoboHeart();
+RoboHeart heart = RoboHeart(Serial);
 
 // PID controller parameters
 #define Kp 20
@@ -19,11 +19,11 @@ RoboHeart heart = RoboHeart();
 #define CONTROL_TICK_PERIOD_US 100.0
 
 #define PID_CONTROL_PRESCALER \
-    5  // Control ticks pasing before PID motorPower Calculation
-#define DC_CONTROL_PRESCALER 15  // Control ticks pasing before DC Motor Control
+    5  // Control ticks passing before PID motorPower Calculation
+#define DC_CONTROL_PRESCALER 15  // Control ticks passing before DC Motor Control
 #define STATISTICS_PRESCALER \
     DC_CONTROL_PRESCALER *   \
-        4  // Control ticks pasing before all the debug printing is performed
+        4  // Control ticks passing before all the debug printing is performed
 
 // Motor control parameters
 float prevAngleDeg = 0;      // Store previos angle
