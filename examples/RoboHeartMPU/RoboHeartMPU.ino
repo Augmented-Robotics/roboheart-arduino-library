@@ -5,21 +5,25 @@
 #include <RoboHeart.h>
 #include <Wire.h>
 
-unsigned long timer = 0;
+unsigned long prevPrintTime = 0;
 
 RoboHeart heart = RoboHeart();
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("RoboHeart MPU Demo");
+
+    // Set up the RoboHeart
     heart.begin();
+
+    Serial.println("RoboHeart MPU Demo");
 }
 
 void loop() {
-    // give computing time to the RoboHeart
+    // Give computing time to the RoboHeart
     heart.beat();
 
-    if (millis() - timer > 1000) {  // print data every second
+    // print IMU data every second
+    if (millis() - prevPrintTime > 1000) {
         Serial.print(F("TEMPERATURE: "));
         Serial.println(heart.mpu.getTemp());
         Serial.print(F("ACCELERO  X: "));
@@ -49,6 +53,6 @@ void loop() {
         Serial.println(heart.mpu.getAngleZ());
         Serial.println(
             F("=====================================================\n"));
-        timer = millis();
+        prevPrintTime = millis();
     }
 }

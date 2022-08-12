@@ -16,7 +16,7 @@ PeriodicTimer::PeriodicTimer(void (*callback)(void),
     : timer(timerBegin(0, 80, true)) {
     timerAttachInterrupt(timer, callback, true);
     setTimePeriod(timerPeriodMicroSec);
-    disable();
+    stop();
 }
 
 PeriodicTimer::PeriodicTimer(void (*callback)(void),
@@ -24,7 +24,7 @@ PeriodicTimer::PeriodicTimer(void (*callback)(void),
     : timer(timerBegin(0, 80, true)), _debug(&debug) {
     timerAttachInterrupt(timer, callback, true);
     setTimePeriod(timerPeriodMicroSec);
-    disable();
+    stop();
 }
 
 void PeriodicTimer::setTimePeriod(uint64_t timerPeriodMicroSec) {
@@ -44,13 +44,13 @@ void PeriodicTimer::setTimePeriod(uint64_t timerPeriodMicroSec) {
     }
 }
 
-void PeriodicTimer::enable() {
+void PeriodicTimer::start() {
     timerRestart(timer);
     timerAlarmEnable(timer);
     timerStart(timer);
 }
 
-void PeriodicTimer::disable() {
+void PeriodicTimer::stop() {
     timerStop(timer);
     timerRestart(timer);
 }

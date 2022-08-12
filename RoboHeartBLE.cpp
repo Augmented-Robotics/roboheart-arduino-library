@@ -19,6 +19,8 @@ static uuidConfigType uuids = {RH_APP_SERVICE_UUID, RH_APP_CHARACTERISTIC_UUID1,
                                RH_APP_CHARACTERISTIC_UUID2,
                                RH_APP_CHARACTERISTIC_UUID3};
 
+static uint8_t bleDefaultPackage[4] = {0x11, 0x22, 0x33, 0x44};
+
 uuidConfigType* InterfaceBLE::_uuidsBLE = &uuids;
 
 void (*InterfaceBLE::char1WriteCallback)(std::string) = NULL;
@@ -70,7 +72,7 @@ class ServerCallbacks : public BLEServerCallbacks {
     };
 };
 
-void InterfaceBLE::configure(uint8_t* package, uint8_t packageSize,
+void InterfaceBLE::begin(uint8_t* package, uint8_t packageSize,
                              uuidConfigType* uuidsConfig) {
     DEBUG_LN_IDENTIFIER("Initialization");
     BLEDevice::init("ESP_GATT_SERVER");
@@ -79,7 +81,11 @@ void InterfaceBLE::configure(uint8_t* package, uint8_t packageSize,
     if (uuidsConfig != NULL) {
         _uuidsBLE = uuidsConfig;
     }
-    _packageCharSize = packageSize;
+
+    if (package == NULL){
+        package = bleDefaultPackage;
+        _packageCharSize = sizeof(bleDefaultPackage);
+    }
 
     BLEService* pService = _Server->createService(_uuidsBLE->service);
     DEBUG_IDENTIFIER("Service UUID: ");
@@ -134,6 +140,7 @@ void InterfaceBLE::setCharacteristicsCallbacks(
     char2WriteCallback = char2Write;
     char3WriteCallback = char3Write;
 }
+
 void InterfaceBLE::setServerCallbacks(void (*onConnect)(void),
                                       void (*onDisconnect)(void)) {
     serverOnConnectCallback = onConnect;
@@ -143,7 +150,7 @@ void InterfaceBLE::setServerCallbacks(void (*onConnect)(void),
 bool InterfaceBLE::startServiceAdvertising() {
     if (!_configured) {
         DEBUG_LN_IDENTIFIER(
-            "Could not start advertising, first configure ble!");
+            "Could not start advertising, first run begin!");
         return false;
     }
     _Advertising->start();
@@ -152,7 +159,7 @@ bool InterfaceBLE::startServiceAdvertising() {
 
 bool InterfaceBLE::stopServiceAdvertising() {
     if (!_configured) {
-        DEBUG_LN_IDENTIFIER("Could not stop advertising, first configure ble!");
+        DEBUG_LN_IDENTIFIER("Could not stop advertising, first run begin!");
         return false;
     }
     _Advertising->stop();
@@ -162,7 +169,7 @@ bool InterfaceBLE::stopServiceAdvertising() {
 bool InterfaceBLE::sendNotifyChar2(uint8_t* package) {
     if (!_configured) {
         DEBUG_LN_IDENTIFIER(
-            "Could not notify Characteristic 2, first configure ble!");
+            "Could not notify Characteristic 2, first run begin!");
         return false;
     }
     _characteristic2->setValue(package, _packageCharSize);

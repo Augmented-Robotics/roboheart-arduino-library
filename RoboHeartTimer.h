@@ -15,8 +15,8 @@ class PeriodicTimer {
     PeriodicTimer(void (*callback)(void), uint64_t timerPeriodMicroSec);
     PeriodicTimer(void (*callback)(void), uint64_t timerPeriodMicroSec,
                   Stream& debug);
-    void enable();
-    void disable();
+    void start();
+    void stop();
     void setTimePeriod(uint64_t timerPeriodMicroSec);
 
    private:

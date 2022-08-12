@@ -8,25 +8,30 @@ RoboHeart heart = RoboHeart();
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("RoboHeart Motor Test");
+
+    // Set up the RoboHeart
     heart.begin();
-    delay(1000);
+
+    Serial.println("RoboHeart DC Motor Demo");
 }
 
 void loop() {
+    // Run motorA
     Serial.println("motorA");
-    heart.motorA.reverse(100);
-    delay(5000);
+    heart.motorA.forward(100);
+    delay(2000);
     heart.motorA.coast();
 
+    // Run motorB
     Serial.println("motorB");
-    heart.motorB.reverse(127);
-    delay(5000);
+    heart.motorB.forward(127);
+    delay(2000);
     heart.motorB.coast();
 
+    // Run motorC
     Serial.println("motorC");
-    heart.motorC.reverse(255);
-    delay(5000);
+    heart.motorC.forward(255);
+    delay(2000);
     heart.motorC.coast();
 
     heart.beat();

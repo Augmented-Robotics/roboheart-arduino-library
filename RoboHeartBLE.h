@@ -33,8 +33,8 @@ class InterfaceBLE {
     static void serverOnDisconnectInvCallback();
     static void charOnWriteInvCallback(std::string uuid, std::string value);
 
-    void configure(uint8_t* package, uint8_t packageSize,
-                   uuidConfigType* uuidsConfig = NULL);
+    void begin(uint8_t* package = NULL, uint8_t packageSize = 0,
+               uuidConfigType* uuidsConfig = NULL);
 
     void setCharacteristicsCallbacks(void (*char1Write)(std::string),
                                      void (*char2Write)(std::string),

@@ -5,6 +5,9 @@
  * Setup for the Augmented Reality Smartphone App
  * is provided. It establishes connection
  * through Bluetooth.
+ * 
+ * Use button to set the stable vertical position
+ * of the Balancing Bot.
  */
 
 #include <RoboHeart.h>
@@ -13,44 +16,55 @@
 
 RoboHeart heart = RoboHeart();
 
+// PID controller parameters
 #define Kp 20
 #define Kd 0.001
 #define Ki 40
 
-#define CONTROL_PERIOD_US 100.0
+#define CONTROL_TICK_PERIOD_US 100.0  // Control tick period in micro-seconds
 
-#define PID_CONTROL_PRESCALER 5
-#define DC_CONTROL_PRESCALER 15
-#define WD_TIMER_PRESCALER 3000
-#define STATISTICS_PRESCALER DC_CONTROL_PRESCALER * 4
+#define PID_CONTROL_PRESCALER \
+    5  // Control ticks pasing before PID motorPower Calculation
+#define DC_CONTROL_PRESCALER 15  // Control ticks pasing before DC Motor Control
+#define WD_TIMER_PRESCALER \
+    3000  // Monitor that the new information is received within that time frame
+#define STATISTICS_PRESCALER \
+    DC_CONTROL_PRESCALER *   \
+        4  // Control ticks pasing before all the debug printing is performed
 
 #define MOTOR_FORWARD false
 #define MOTOR_REVERSE true
 #define MOTOR_RIGHT true
 #define MOTOR_LEFT false
 
-float prevAngleDeg = 0;
-float motorPower = 0;
-float errorSum = 0;
-float currentAngleDeg = 0;
-float offsetMotorPower = 0;
-float targetAngleDeg = 0.;
-float offsetAngleDeg = 0.;
-float turnMotorA = 1.;
-float turnMotorB = 1.;
+// Motor control parameters
+float prevAngleDeg = 0;      // Store previos angle
+float motorPower = 0;        // Calculated Power to be supplied to the motors
+float errorSum = 0;          // For Integral part of the PID controller
+float currentAngleDeg = 0;   // Current Angle
+float offsetMotorPower = 0;  // Motor Power Bias (for FORWARD/BACKWARD motions)
+float targetAngleDeg = 0.;   // Target Angle for the Balancing bot
+float offsetAngleDeg = 0.;   // Stable vertical position angle
+float turnMotorA = 1.;       // Coefficient for Motor A to generate Turn motion
+float turnMotorB = 1.;       // Coefficient for Motor B to generate Turn motion
 
+// Track the timer activation for each task individually
 unsigned long pidControlTick = 0;
 unsigned long dcControlTick = 0;
 unsigned long statisticsTick = 0;
 unsigned long wdTimerTick = 0;
 
+// Store previous time
 unsigned long prevTimeIntervalMS = 0;
 
-/* BLE params */
+// Example of the package that can be transmited with BLE
 static uint8_t packageBle[4] = {0x11, 0x22, 0x33, 0x44};
-volatile bool bleDeviceConnected = false;
-bool bleConnUpdated = false;
 
+// BLE status flags
+bool bleDeviceConnected = false;
+bool bleNewStatusReceived = false;
+
+// Configure configuration for Forward/Backward motion
 void setupDirection(bool dir) {
     if (dir == MOTOR_FORWARD) {
         targetAngleDeg = offsetAngleDeg - 5;
@@ -61,6 +75,7 @@ void setupDirection(bool dir) {
     }
 }
 
+// Configure configuration for Turning motion
 void setupTurn(int dir) {
     if (dir == MOTOR_LEFT) {
         turnMotorA = 1.5;
@@ -71,6 +86,7 @@ void setupTurn(int dir) {
     }
 }
 
+// Reset control values
 void resetControl() {
     offsetMotorPower = 0;
     targetAngleDeg = offsetAngleDeg;
@@ -78,6 +94,7 @@ void resetControl() {
     turnMotorB = 1.;
 }
 
+// When user sends data to characterstic repsonsible for the Motor Control
 void onWriteMotorControl(std::string value) {
     if (value.length() == 3) {
         wdTimerTick = 0;
@@ -132,24 +149,29 @@ void onWriteMotorControl(std::string value) {
     }
 }
 
+// Callback for device disconnected event
 void bleDisconnected() {
-    bleConnUpdated = false;
+    bleNewStatusReceived = true;
     bleDeviceConnected = false;
+    Serial.println("device disconnected.");
 }
 
+// Callback for device connected event
 void bleConnected() {
-    bleConnUpdated = false;
+    bleNewStatusReceived = true;
     bleDeviceConnected = true;
+    Serial.println("device connected.");
 }
 
+// handle -180 after crossing 180 Degrees
 float processAngle(float angle) {
-    // handle -180 after crossing 180
     if (angle < -90) {
         return angle = 360 + angle;
     }
     return angle;
 }
 
+// Periodic timer executes the control ticks
 void tick() {
     // reduce code to minimal in order to avoid errors
     pidControlTick++;
@@ -158,64 +180,78 @@ void tick() {
     wdTimerTick++;
 }
 
+// When Button is pressed the current angle is saved
+// and later used to indicate stable vertical position
+// of the Balancing Bot.
 void processPinInterrupt() {
     offsetAngleDeg = heart.mpu.getAngleX();
     targetAngleDeg = offsetAngleDeg;
 }
 
 InterfaceBLE ble = InterfaceBLE();
-PeriodicTimer timer = PeriodicTimer(tick, CONTROL_PERIOD_US, Serial);
+
+// Periodic timer executes the control ticks
+PeriodicTimer timer = PeriodicTimer(tick, CONTROL_TICK_PERIOD_US, Serial);
 
 void setup() {
     Serial.begin(115200);
 
-    // initialize with or without request for IMU automatic calibration
-    heart.begin(false);
+    // Initialize RoboHeart with or without request for IMU automatic
+    // calibration
+    bool mpuRequestCalibration = true;
+    heart.begin(mpuRequestCalibration);
 
+    // One can set mpuRequestCalibration = false and
     // use manual offsets (taken from previous calibrations)
-    heart.mpu.setGyroOffsets(-1.76, -0.07, -0.9);
-    heart.mpu.setAccOffsets(0.04, -0.00, 0.11);
+    // heart.mpu.setGyroOffsets(-1.76, -0.07, -0.9);
+    // heart.mpu.setAccOffsets(0.04, -0.00, 0.11);
 
-    //  // print calculated offsets
-    //  Serial.print("Offsets: gx ");
-    //  Serial.print(heart.mpu.getGyroXoffset());
-    //  Serial.print(" gy ");
-    //  Serial.print(heart.mpu.getGyroYoffset());
-    //  Serial.print(" gz ");
-    //  Serial.print(heart.mpu.getGyroZoffset());
-    //  Serial.print(" ax ");
-    //  Serial.print(heart.mpu.getAccXoffset());
-    //  Serial.print(" ay ");
-    //  Serial.print(heart.mpu.getAccYoffset());
-    //  Serial.print(" az ");
-    //  Serial.println(heart.mpu.getAccZoffset());
+    // print calculated offsets
+    char offsets_msg[200];
+    sprintf(offsets_msg, "Offsets Gyro gx: %f, gy: %f gz: %f",
+            heart.mpu.getGyroXoffset(), heart.mpu.getGyroYoffset(),
+            heart.mpu.getGyroZoffset());
+    Serial.println(offsets_msg);
+    sprintf(offsets_msg, "Offsets Accel ax: %f, ay: %f az: %f",
+            heart.mpu.getAccXoffset(), heart.mpu.getAccYoffset(),
+            heart.mpu.getAccZoffset());
+    Serial.println(offsets_msg);
 
-    // ble configuration
-    ble.configure(packageBle, sizeof(packageBle));
+    // BLE configuration
 
+    // Setting Callbacks are not mandatory but provides useful functionality
+    // Connection and disconnection callbacks
     ble.setServerCallbacks(bleConnected, bleDisconnected);
+    // Callbacks for the write events for each characteristic
     ble.setCharacteristicsCallbacks(onWriteMotorControl, NULL, NULL);
+
+    // Call begin to finish all the Bluetooth configurations
+    ble.begin();
+
+    // Start advartising so that the App can connect
     ble.startServiceAdvertising();
 
+    // Configure Button which is used to set the
+    // stable vertical position of the Balancing Bot.
     pinMode(BUTTON_ROBOHEART, INPUT);
     attachInterrupt(BUTTON_ROBOHEART, processPinInterrupt, FALLING);
 
-    // Resolve false triggering of button during flashing
-    // TODO: remove in RH rev 0.3
-    delay(100);
+    delay(100);  // Resolve false triggering of button during flashing
     offsetAngleDeg = 0;
     targetAngleDeg = 0;
 
+    // Save current time and start timer
     prevTimeIntervalMS = millis();
-    timer.enable();
+    timer.start();
 
-    Serial.println("Init finished");
+    Serial.println("RoboHeart Balance Bot Control Demo");
 }
 
 void loop() {
+    // Give computing time to the RoboHeart
     heart.beat();
 
-    // Perform PID control every CONTROL_PERIOD_US*PID_CONTROL_PRESCALER
+    // Perform PID control every CONTROL_TICK_PERIOD_US*PID_CONTROL_PRESCALER
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
         unsigned long curTimeIntervalMS = millis();
         pidControlTick = 0;
@@ -233,7 +269,7 @@ void loop() {
         prevTimeIntervalMS = curTimeIntervalMS;
     }
 
-    // Perform Motor control every CONTROL_PERIOD_US*DC_CONTROL_PRESCALER
+    // Perform Motor control every CONTROL_TICK_PERIOD_US*DC_CONTROL_PRESCALER
     if (dcControlTick >= DC_CONTROL_PRESCALER) {
         dcControlTick = 0;
         if (motorPower > 0) {
@@ -245,27 +281,27 @@ void loop() {
         }
     }
 
-    // Activate safety timer every CONTROL_PERIOD_US*WD_TIMER_PRESCALER
+    // Activate safety timer every CONTROL_TICK_PERIOD_US*WD_TIMER_PRESCALER
     if (wdTimerTick >= WD_TIMER_PRESCALER) {
         wdTimerTick = 0;
         resetControl();
     }
 
-    if (!bleDeviceConnected && !bleConnUpdated) {
-        // BLE disconnecting
+    // Disconnecting
+    if (!bleDeviceConnected && bleNewStatusReceived) {
+        bleNewStatusReceived = false;
         ble.startServiceAdvertising();
-        Serial.println("Disconnected, start advertising");
-        bleConnUpdated = true;
+        Serial.println("Start advertising");
         motorPower = 0;
     }
 
-    if (bleDeviceConnected && !bleConnUpdated) {
-        // BLE connecting
-        Serial.println("Connected");
-        bleConnUpdated = true;
+    // Connecting
+    if (bleDeviceConnected && bleNewStatusReceived) {
+        bleNewStatusReceived = false;
+        // do stuff here on connecting
     }
 
-    // Print statistics every CONTROL_PERIOD_US*STATISTICS_PRESCALER
+    // Print statistics every CONTROL_TICK_PERIOD_US*STATISTICS_PRESCALER
     if (statisticsTick >= STATISTICS_PRESCALER) {
         statisticsTick = 0;
         Serial.print(" P :");

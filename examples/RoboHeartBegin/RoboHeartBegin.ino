@@ -7,11 +7,11 @@
 RoboHeart heart = RoboHeart();
 
 void setup() {
-    // set up the RoboHeart
+    // Set up the RoboHeart
     heart.begin();
 }
 
 void loop() {
-    // give computing time to the RoboHeart
+    // Give computing time to the RoboHeart
     heart.beat();
 }

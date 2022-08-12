@@ -5,18 +5,21 @@
 #include <RoboHeart.h>
 
 RoboHeart heart = RoboHeart();
-bool ledState = HIGH;
+bool ledState = HIGH; // Save LED state
 
 void setup() {
     Serial.begin(115200);
     
-    // set up the RoboHeart
+    // Set up the RoboHeart
     heart.begin();
 
-    // configure LED pin
+    // Configure the LED pin
     pinMode(LED_ROBOHEART, OUTPUT);
+
+    Serial.println("RoboHeart LED Demo");
 }
 
+// Change LED state
 void toggleLED() {
     if (ledState == HIGH) {
         Serial.println("LED status: Low");
@@ -30,7 +33,7 @@ void toggleLED() {
 }
 
 void loop() {
-    // give computing time to the RoboHeart
+    // Give computing time to the RoboHeart
     heart.beat();
     
     // LED indicator

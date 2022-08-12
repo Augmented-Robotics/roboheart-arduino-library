@@ -7,9 +7,11 @@
 
 RoboHeart heart = RoboHeart();
 
-#define CONTROL_PERIOD_US 100
-#define STEPPER_CONTROL_PRESCALER 25
-#define MOTOR_STEPS_FULL_ROTATION 230
+#define CONTROL_TICK_PERIOD_US 100  // Control tick period in micro-seconds
+#define STEPPER_CONTROL_PRESCALER \
+    25  // Control ticks pasing before Stepper Motor Control
+#define MOTOR_STEPS_FULL_ROTATION \
+    230  // Stepper steps before achieving one full rotation
 
 // Control is achieved through half-step mode
 #define MOTOR_CTRL_STEPS_FULL_ROTATION (2 * MOTOR_STEPS_FULL_ROTATION)
@@ -24,19 +26,25 @@ bool direction = STEPPER_FORWARD;
 
 void tick() { controlTick++; }
 
-PeriodicTimer timer = PeriodicTimer(tick, CONTROL_PERIOD_US, Serial);
+// Periodic timer executes the control ticks
+PeriodicTimer timer = PeriodicTimer(tick, CONTROL_TICK_PERIOD_US, Serial);
 
 void setup() {
     Serial.begin(115200);
 
+    // Set up the RoboHeart
     heart.begin();
 
-    timer.enable();
+    // start the timer
+    timer.start();
+
+    Serial.println("RoboHeart StepperMotor Demo");
 }
 
 unsigned long prevTimeMS = 0;
 
 void loop() {
+    // Stepper Motor Control
     if (controlTick >= STEPPER_CONTROL_PRESCALER) {
         controlTick = 0;
         steps++;
@@ -49,8 +57,9 @@ void loop() {
         }
     }
 
+    // Full rotation achieved
     if (steps >= MOTOR_CTRL_STEPS_FULL_ROTATION) {
-        timer.disable();
+        timer.stop();
 
         unsigned long currentTimeMS = millis();
         Serial.print("Full rotation done |");
@@ -68,6 +77,6 @@ void loop() {
 
         prevTimeMS = currentTimeMS;
         steps = 0;
-        timer.enable();
+        timer.start();
     }
 }

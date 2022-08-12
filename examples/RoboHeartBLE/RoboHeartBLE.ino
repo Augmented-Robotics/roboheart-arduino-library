@@ -8,26 +8,33 @@
 
 RoboHeart heart = RoboHeart();
 
+// Example of the package that can be transmited with BLE
 static uint8_t blePackage[4] = {0x11, 0x22, 0x33, 0x44};
 
-volatile bool bleDeviceConnected = false;
+// BLE status flags
+bool bleDeviceConnected = false;
 bool bleNewStatusReceived = false;
 
-// Safety timer
-#define WD_TIMER_PERIOD_US 300000
-volatile int wdTimerTriggered = 0;
+#define WD_TIMER_PERIOD_US \
+    300000  // Monitor that the new information is
+            // received within that time frame
 
+// Flag to indicate if the timer is triggered
+int wdTimerTriggered = 0;
+
+// Action when no response received within WD_TIMER_PERIOD_US
 void wdTimerCallback() { wdTimerTriggered++; }
 
+// Timer gets activated when no response received within WD_TIMER_PERIOD_US
 PeriodicTimer watchdogTimer =
     PeriodicTimer(wdTimerCallback, WD_TIMER_PERIOD_US, Serial);
 
-// BLE
 InterfaceBLE ble = InterfaceBLE(Serial);
 
+// When user sends data to characterstic repsonsible for the Motor Control
 void onWriteMotorControl(std::string value) {
     if (value.length() == 3) {
-        watchdogTimer.disable();
+        watchdogTimer.stop();
         Serial.println("*********");
         Serial.print("New value: ");
         for (int i = 0; i < value.length(); i++) {
@@ -51,10 +58,15 @@ void onWriteMotorControl(std::string value) {
         Serial.println(response);
 
         Serial.println("*********");
-        watchdogTimer.enable();
+        watchdogTimer.start();
+    } else {
+        Serial.print("Received invalid control message with length: ");
+        Serial.println(value.length());
+        Serial.println("Doing nothing.");
     }
 }
 
+// Callback for device disconnected event
 void bleDisconnected() {
     bleNewStatusReceived = true;
     bleDeviceConnected = false;
@@ -64,6 +76,7 @@ void bleDisconnected() {
     heart.motorC.sleep(true);
 }
 
+// Callback for device connected event
 void bleConnected() {
     bleNewStatusReceived = true;
     bleDeviceConnected = true;
@@ -76,33 +89,40 @@ void bleConnected() {
 void setup() {
     Serial.begin(115200);
 
-    // set up the RoboHeart
+    // Set up the RoboHeart
     heart.begin();
 
-    // ble configuration
-    ble.configure(blePackage, sizeof(blePackage));
+    // BLE configuration
 
+    // Setting Callbacks are not mandatory but provides useful functionality
+    // Connection and disconnection callbacks
     ble.setServerCallbacks(bleConnected, bleDisconnected);
+    // Callbacks for the write events for each characteristic
     ble.setCharacteristicsCallbacks(onWriteMotorControl, NULL, NULL);
+
+    // Call begin to finish all the Bluetooth configurations
+    ble.begin();
+
+    // Start advartising so that the App can connect
     ble.startServiceAdvertising();
 
-    Serial.println("RH setup finished");
+    Serial.println("RoboHeart BLE Demo");
 }
 
 void loop() {
-    // give computing time to the RoboHeart
+    // Give computing time to the RoboHeart
     heart.beat();
 
-    // send some information to the ble
+    // Send some information to the ble
     if (bleDeviceConnected) {
         blePackage[0]++;
         ble.sendNotifyChar2(blePackage);
         delay(
             3);  // bluetooth stack will go into congestion, if too many packets
-                 // are sent, in 6 hours test i was able to go as low as 3ms
+                 // are sent, in 6 hours test we were able to go as low as 3ms
     }
 
-    // disconnecting
+    // Disconnecting
     if (!bleDeviceConnected && bleNewStatusReceived) {
         bleNewStatusReceived = false;
         delay(500);  // give the bluetooth stack the chance to get things ready
@@ -113,15 +133,15 @@ void loop() {
         heart.motorC.sleep(true);
     }
 
-    // connecting
+    // Connecting
     if (bleDeviceConnected && bleNewStatusReceived) {
         bleNewStatusReceived = false;
         // do stuff here on connecting
     }
 
-    // watchdog timer
+    // Watchdog timer
     if (wdTimerTriggered > 0) {
-        watchdogTimer.disable();
+        watchdogTimer.stop();
 
         Serial.print("Safety timer activated: ");
         Serial.println(wdTimerTriggered);
