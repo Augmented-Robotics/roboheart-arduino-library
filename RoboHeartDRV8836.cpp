@@ -20,6 +20,7 @@ int clampSpeed(int speed, int minSpeed, int maxSpeed) {
         return speed;
     }
 }
+
 RoboHeartDRV8836::RoboHeartDRV8836() { _debug = NULL; }
 RoboHeartDRV8836::RoboHeartDRV8836(Stream& debug) : _debug(&debug) {}
 

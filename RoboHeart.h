@@ -31,49 +31,7 @@ class RoboHeart {
     bool begin(bool calc_mpu_offsets = true);
     void beat();
 
-    void motor0_coast();
-    void motor0_sleep(bool sleep = true);
-    void motor0_reverse(int speed);
-    void motor0_forward(int speed);
-    void motor0_brake();
-
-    void motor1_coast();
-    void motor1_sleep(bool sleep = true);
-    void motor1_reverse(int speed);
-    void motor1_forward(int speed);
-    void motor1_brake();
-
-    void motor2_coast();
-    void motor2_sleep(bool sleep = true);
-    void motor2_reverse(int speed);
-    void motor2_forward(int speed);
-    void motor2_brake();
-
     void handleMotorMessage(Motor_MSG_t motormsg, char* response);
-
-    float getTemp();
-    float getAccX();
-    float getAccY();
-    float getAccZ();
-    float getGyroX();
-    float getGyroY();
-    float getGyroZ();
-    float getAccAngleX();
-    float getAccAngleY();
-    float getAngleX();
-    float getAngleY();
-    float getAngleZ();
-
-    float getGyroXoffset();
-    float getGyroYoffset();
-    float getGyroZoffset();
-
-    float getAccXoffset();
-    float getAccYoffset();
-    float getAccZoffset();
-
-    void setGyroOffsets(float x, float y, float z);
-    void setAccOffsets(float x, float y, float z);
 
     RoboHeartStepperMotor stepper;
     RoboHeartDRV8836 motor0;

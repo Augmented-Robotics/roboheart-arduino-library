@@ -1,5 +1,5 @@
 /*!
- *  @file RoboHeart.h
+ *  @file DebuggerMsgs.h
  *
  * 	Arduino library for the RoboHeart.
  *

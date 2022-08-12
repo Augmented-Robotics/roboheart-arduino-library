@@ -60,18 +60,18 @@ void BLEdisconnected() {
     bleNewStatusReceived = true;
     bleDeviceConnected = false;
     Serial.println("device disconnected.");
-    heart.motor0_sleep(true);
-    heart.motor1_sleep(true);
-    heart.motor2_sleep(true);
+    heart.motor0.sleep(true);
+    heart.motor1.sleep(true);
+    heart.motor2.sleep(true);
 }
 
 void BLEconnected() {
     bleNewStatusReceived = true;
     bleDeviceConnected = true;
     Serial.println("device connected.");
-    heart.motor0_sleep(false);
-    heart.motor1_sleep(false);
-    heart.motor2_sleep(false);
+    heart.motor0.sleep(false);
+    heart.motor1.sleep(false);
+    heart.motor2.sleep(false);
 }
 
 void setup() {
@@ -112,9 +112,9 @@ void loop() {
         delay(500);  // give the bluetooth stack the chance to get things ready
         ble.StartServiceAdvertising();
         Serial.println("start advertising");
-        heart.motor0_sleep(true);
-        heart.motor1_sleep(true);
-        heart.motor2_sleep(true);
+        heart.motor0.sleep(true);
+        heart.motor1.sleep(true);
+        heart.motor2.sleep(true);
     }
 
     // connecting

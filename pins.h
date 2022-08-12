@@ -1,9 +1,5 @@
 #ifndef _ROBOHEART_PINS_H
 #define _ROBOHEART_PINS_H
-/*
-*** This file will disapear and it will be replaced by an arduino_pin.h that we
-*include into the esspresif arduino core
-*/
 
 // MOTOR 0
 #define GPIO_MA_PH_IN1 25  //  PHASE/IN1  //DAC1
@@ -24,7 +20,7 @@
 #define GPIO_MC_SLEEP 0    //  nSLEEP
 
 // LOAD SWITCH ENABLE FOR MOTORS
-#define LS_EN_CNTRL 14
+#define LS_EN_CNTRL 14 //TODO: Still available?
 
 #define I2C_SDA 21
 #define I2C_SCL 22

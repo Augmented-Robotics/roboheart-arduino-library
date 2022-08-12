@@ -12,10 +12,6 @@ RoboHeart heart = RoboHeart();
 void setup() {
     Serial.begin(115200);
     Serial.println("RoboHeart MPU Demo");
-    // set up the RoboHeart
-    Wire.setPins(I2C_SDA, I2C_SCL);
-    Wire.begin();
-    delay(100);
     heart.begin();
 }
 
@@ -25,32 +21,32 @@ void loop() {
 
     if (millis() - timer > 1000) {  // print data every second
         Serial.print(F("TEMPERATURE: "));
-        Serial.println(heart.getTemp());
+        Serial.println(heart.mpu.getTemp());
         Serial.print(F("ACCELERO  X: "));
-        Serial.print(heart.getAccX());
+        Serial.print(heart.mpu.getAccX());
         Serial.print("\tY: ");
-        Serial.print(heart.getAccY());
+        Serial.print(heart.mpu.getAccY());
         Serial.print("\tZ: ");
-        Serial.println(heart.getAccZ());
+        Serial.println(heart.mpu.getAccZ());
 
         Serial.print(F("GYRO      X: "));
-        Serial.print(heart.getGyroX());
+        Serial.print(heart.mpu.getGyroX());
         Serial.print("\tY: ");
-        Serial.print(heart.getGyroY());
+        Serial.print(heart.mpu.getGyroY());
         Serial.print("\tZ: ");
-        Serial.println(heart.getGyroZ());
+        Serial.println(heart.mpu.getGyroZ());
 
         Serial.print(F("ACC ANGLE X: "));
-        Serial.print(heart.getAccAngleX());
+        Serial.print(heart.mpu.getAccAngleX());
         Serial.print("\tY: ");
-        Serial.println(heart.getAccAngleY());
+        Serial.println(heart.mpu.getAccAngleY());
 
         Serial.print(F("ANGLE     X: "));
-        Serial.print(heart.getAngleX());
+        Serial.print(heart.mpu.getAngleX());
         Serial.print("\tY: ");
-        Serial.print(heart.getAngleY());
+        Serial.print(heart.mpu.getAngleY());
         Serial.print("\tZ: ");
-        Serial.println(heart.getAngleZ());
+        Serial.println(heart.mpu.getAngleZ());
         Serial.println(
             F("=====================================================\n"));
         timer = millis();

@@ -49,7 +49,7 @@ void tick() {
 }
 
 void processPinInterrupt() {
-    offsetAngleDeg = heart.getAngleX();
+    offsetAngleDeg = heart.mpu.getAngleX();
     targetAngleDeg = offsetAngleDeg;
 }
 
@@ -62,22 +62,22 @@ void setup() {
     heart.begin(false);
 
     // use manual offsets (taken from previous calibrations)
-    heart.setGyroOffsets(-1.76, -0.07, -0.9);
-    heart.setAccOffsets(0.04, -0.00, 0.11);
+    heart.mpu.setGyroOffsets(-1.76, -0.07, -0.9);
+    heart.mpu.setAccOffsets(0.04, -0.00, 0.11);
 
     //  // print calculated offsets
     //  Serial.print("Offsets: gx ");
-    //  Serial.print(heart.getGyroXoffset());
+    //  Serial.print(heart.mpu.getGyroXoffset());
     //  Serial.print(" gy ");
-    //  Serial.print(heart.getGyroYoffset());
+    //  Serial.print(heart.mpu.getGyroYoffset());
     //  Serial.print(" gz ");
-    //  Serial.print(heart.getGyroZoffset());
+    //  Serial.print(heart.mpu.getGyroZoffset());
     //  Serial.print(" ax ");
-    //  Serial.print(heart.getAccXoffset());
+    //  Serial.print(heart.mpu.getAccXoffset());
     //  Serial.print(" ay ");
-    //  Serial.print(heart.getAccYoffset());
+    //  Serial.print(heart.mpu.getAccYoffset());
     //  Serial.print(" az ");
-    //  Serial.println(heart.getAccZoffset());
+    //  Serial.println(heart.mpu.getAccZoffset());
 
     pinMode(BUTTON_PIN, INPUT);
     attachInterrupt(BUTTON_PIN, processPinInterrupt, FALLING);
@@ -101,7 +101,7 @@ void loop() {
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
         unsigned long curTimeIntervalMS = millis();
         pidControlTick = 0;
-        currentAngleDeg = process_angle(heart.getAngleX());
+        currentAngleDeg = process_angle(heart.mpu.getAngleX());
 
         float error = currentAngleDeg - targetAngleDeg;
         errorSum = constrain(errorSum + error, -Kp * 50, Kp * 50);
@@ -119,11 +119,11 @@ void loop() {
     if (dcControlTick >= DC_CONTROL_PRESCALER) {
         dcControlTick = 0;
         if (motorPower > 0) {
-            heart.motor0_reverse(motorPower);
-            heart.motor1_reverse(motorPower);
+            heart.motor0.reverse(motorPower);
+            heart.motor1.reverse(motorPower);
         } else if (motorPower < 0) {
-            heart.motor0_forward(-motorPower);
-            heart.motor1_forward(-motorPower);
+            heart.motor0.forward(-motorPower);
+            heart.motor1.forward(-motorPower);
         }
     }
 
