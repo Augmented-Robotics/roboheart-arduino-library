@@ -7,32 +7,9 @@
 
 #include "RoboHeart.h"
 
-#define DEBUG_ROBOHEART(x)                       \
-    {                                            \
-        if (_debug != NULL) {                    \
-            _debug->print("[ROBOHEART_DEBUG] "); \
-            _debug->print(x);                    \
-        }                                        \
-    }
-#define DEBUG_LN_ROBOHEART(x)                    \
-    {                                            \
-        if (_debug != NULL) {                    \
-            _debug->print("[ROBOHEART_DEBUG] "); \
-            _debug->println(x);                  \
-        }                                        \
-    }
-#define DEBUG(x)              \
-    {                         \
-        if (_debug != NULL) { \
-            _debug->print(x); \
-        }                     \
-    }
-#define DEBUG_LN(x)             \
-    {                           \
-        if (_debug != NULL) {   \
-            _debug->println(x); \
-        }                       \
-    }
+#define FILE_IDENTIFIER \
+    "ROBOHEART"  // Define identifier before including DebuggerMsgs.h
+#include "DebuggerMsgs.h"
 
 RoboHeart::RoboHeart() { _debug = NULL; }
 
@@ -43,14 +20,11 @@ RoboHeart::RoboHeart(Stream& debug)
       motor2(RoboHeartDRV8836(debug)),
       stepper(RoboHeartStepperMotor(debug)) {}
 
-RoboHeart::~RoboHeart(void) {
-    // delete mpu;
-}
+RoboHeart::~RoboHeart(void) {}
 
 bool RoboHeart::begin(bool calc_mpu_offsets) {
     Wire.begin();
     // MPU6050 SETUP
-    Serial.print("MPU6050 status: ");
     mpu.setAddress(MPU6050_I2C_ADDR);
     byte status = mpu.begin();
 
@@ -60,12 +34,14 @@ bool RoboHeart::begin(bool calc_mpu_offsets) {
         status = mpu.begin();
     }
 
-    Serial.println(status);
+    DEBUG_IDENTIFIER("MPU6050 status: ");
+    DEBUG_LN(status);
+
     if (status == 0 && calc_mpu_offsets) {
-        Serial.println("Calculating offsets, do not move MPU6050");
+        DEBUG_LN_IDENTIFIER("Calculating offsets, do not move MPU6050");
         delay(1000);
         mpu.calcOffsets(true, true);  // gyro and accelero
-        Serial.println("Done!\n");
+        DEBUG_LN_IDENTIFIER("Done!\n");
     }
 
     // MOTOR SETUP

@@ -7,32 +7,9 @@
 
 #include "RoboHeartDRV8836.h"
 
-#define DEBUG_DRV8836(x)                       \
-    {                                          \
-        if (_debug != NULL) {                  \
-            _debug->print("[DRV8836_DEBUG] "); \
-            _debug->print(x);                  \
-        }                                      \
-    }
-#define DEBUG_LN_DRV8836(x)                    \
-    {                                          \
-        if (_debug != NULL) {                  \
-            _debug->print("[DRV8836_DEBUG] "); \
-            _debug->println(x);                \
-        }                                      \
-    }
-#define DEBUG(x)              \
-    {                         \
-        if (_debug != NULL) { \
-            _debug->print(x); \
-        }                     \
-    }
-#define DEBUG_LN(x)             \
-    {                           \
-        if (_debug != NULL) {   \
-            _debug->println(x); \
-        }                       \
-    }
+#define FILE_IDENTIFIER \
+    "DRV8836"  // Define identifier before including DebuggerMsgs.h
+#include "DebuggerMsgs.h"
 
 int clampSpeed(int speed, int minSpeed, int maxSpeed) {
     if (speed < minSpeed) {
@@ -98,20 +75,20 @@ void RoboHeartDRV8836::coast() {
 }
 
 void RoboHeartDRV8836::forward(int speed) {
-    DEBUG_DRV8836("Received speed: ");
+    DEBUG_IDENTIFIER("Received speed: ");
     DEBUG_LN(speed);
     _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
-    DEBUG_DRV8836("Running at speed: ");
+    DEBUG_IDENTIFIER("Running at speed: ");
     DEBUG_LN(_speed);
     ledcWrite(analogGetChannel(_in1Pin), _speed);
     ledcWrite(analogGetChannel(_in2Pin), 0);
 }
 
 void RoboHeartDRV8836::reverse(int speed) {
-    DEBUG_DRV8836("Received speed: ");
+    DEBUG_IDENTIFIER("Received speed: ");
     DEBUG_LN(speed);
     _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
-    DEBUG_DRV8836("Running at speed: ");
+    DEBUG_IDENTIFIER("Running at speed: ");
     DEBUG_LN(_speed);
     ledcWrite(analogGetChannel(_in1Pin), 0);
     ledcWrite(analogGetChannel(_in2Pin), _speed);

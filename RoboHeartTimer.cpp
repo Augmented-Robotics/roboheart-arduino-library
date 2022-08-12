@@ -7,32 +7,9 @@
 
 #include "RoboHeartTimer.h"
 
-#define DEBUG_TIMER(x)                       \
-    {                                        \
-        if (_debug != NULL) {                \
-            _debug->print("[TIMER_DEBUG] "); \
-            _debug->print(x);                \
-        }                                    \
-    }
-#define DEBUG_LN_TIMER(x)                    \
-    {                                        \
-        if (_debug != NULL) {                \
-            _debug->print("[TIMER_DEBUG] "); \
-            _debug->println(x);              \
-        }                                    \
-    }
-#define DEBUG(x)              \
-    {                         \
-        if (_debug != NULL) { \
-            _debug->print(x); \
-        }                     \
-    }
-#define DEBUG_LN(x)             \
-    {                           \
-        if (_debug != NULL) {   \
-            _debug->println(x); \
-        }                       \
-    }
+#define FILE_IDENTIFIER \
+    "TIMER"  // Define identifier before including DebuggerMsgs.h
+#include "DebuggerMsgs.h"
 
 PeriodicTimer::PeriodicTimer(void (*callback)(void),
                              uint64_t timerPeriodMicroSec)

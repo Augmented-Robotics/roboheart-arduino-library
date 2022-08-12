@@ -7,32 +7,9 @@
 
 #include "RoboHeartStepperMotor.h"
 
-#define DEBUG_STEPPERMOTOR(x)                        \
-    {                                                \
-        if (_debug != NULL) {                        \
-            _debug->print("[STEPPER_MOTOR_DEBUG] "); \
-            _debug->print(x);                        \
-        }                                            \
-    }
-#define DEBUG_LN_STEPPERMOTOR(x)                     \
-    {                                                \
-        if (_debug != NULL) {                        \
-            _debug->print("[STEPPER_MOTOR_DEBUG] "); \
-            _debug->println(x);                      \
-        }                                            \
-    }
-#define DEBUG(x)              \
-    {                         \
-        if (_debug != NULL) { \
-            _debug->print(x); \
-        }                     \
-    }
-#define DEBUG_LN(x)             \
-    {                           \
-        if (_debug != NULL) {   \
-            _debug->println(x); \
-        }                       \
-    }
+#define FILE_IDENTIFIER \
+    "STEPPER"  // Define identifier before including DebuggerMsgs.h
+#include "DebuggerMsgs.h"
 
 RoboHeartStepperMotor::RoboHeartStepperMotor() { _debug = NULL; }
 
@@ -49,7 +26,7 @@ void RoboHeartStepperMotor::begin(RoboHeartDRV8836* motor0,
 void RoboHeartStepperMotor::executeHalfStep(int cmd,
                                             StepperDirection_t direction) {
     if (_motor0 == NULL || _motor1 == NULL) {
-        DEBUG_LN_STEPPERMOTOR("Configure the struct with begin() first");
+        DEBUG_LN_IDENTIFIER("Configure the struct with begin() first");
         return;
     }
 
@@ -125,7 +102,7 @@ void RoboHeartStepperMotor::executeHalfStep(int cmd,
             break;
 
         default:
-            DEBUG_STEPPERMOTOR("Error: Received invalid command: ");
+            DEBUG_IDENTIFIER("Error: Received invalid command: ");
             DEBUG_LN(cmd);
             break;
     }
