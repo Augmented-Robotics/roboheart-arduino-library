@@ -11,32 +11,9 @@
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 
-#define DEBUG_BLE(x)                       \
-    {                                      \
-        if (_debug != NULL) {              \
-            _debug->print("[BLE_DEBUG] "); \
-            _debug->print(x);              \
-        }                                  \
-    }
-#define DEBUG_LN_BLE(x)                    \
-    {                                      \
-        if (_debug != NULL) {              \
-            _debug->print("[BLE_DEBUG] "); \
-            _debug->println(x);            \
-        }                                  \
-    }
-#define DEBUG(x)              \
-    {                         \
-        if (_debug != NULL) { \
-            _debug->print(x); \
-        }                     \
-    }
-#define DEBUG_LN(x)             \
-    {                           \
-        if (_debug != NULL) {   \
-            _debug->println(x); \
-        }                       \
-    }
+#define FILE_IDENTIFIER \
+    "BLE"  // Define identifier before including DebuggerMsgs.h
+#include "DebuggerMsgs.h"
 
 static BLE_UUID_Config_t uuids = {
     RH_APP_SERVICE_UUID, RH_APP_CHARACTERISTIC_UUID1,
@@ -95,7 +72,7 @@ class ServerCallbacks : public BLEServerCallbacks {
 
 void InterfaceBLE::configure(uint8_t* package, uint8_t package_size,
                              BLE_UUID_Config_t* config_uuids) {
-    DEBUG_LN_BLE("Initialization");
+    DEBUG_LN_IDENTIFIER("Initialization");
     BLEDevice::init("ESP_GATT_SERVER");
     pServer = BLEDevice::createServer();
 
@@ -105,7 +82,7 @@ void InterfaceBLE::configure(uint8_t* package, uint8_t package_size,
     packageCharSize = package_size;
 
     BLEService* pService = pServer->createService(ble_uuids->service);
-    DEBUG_BLE("Service UUID: ");
+    DEBUG_IDENTIFIER("Service UUID: ");
     DEBUG_LN(pService->getUUID().toString().c_str());
 
     pServer->setCallbacks(new ServerCallbacks());
@@ -115,7 +92,7 @@ void InterfaceBLE::configure(uint8_t* package, uint8_t package_size,
         BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
 
     pCharacteristic1->setCallbacks(new CharacteristicCallbacks());
-    DEBUG_BLE("Characteristic1 UUID: ");
+    DEBUG_IDENTIFIER("Characteristic1 UUID: ");
     DEBUG_LN(pCharacteristic1->getUUID().toString().c_str());
 
     pCharacteristic2 = pService->createCharacteristic(
@@ -126,7 +103,7 @@ void InterfaceBLE::configure(uint8_t* package, uint8_t package_size,
 
     pCharacteristic2->setCallbacks(new CharacteristicCallbacks());
 
-    DEBUG_BLE("Characteristic2 UUID: ");
+    DEBUG_IDENTIFIER("Characteristic2 UUID: ");
     DEBUG_LN(pCharacteristic2->getUUID().toString().c_str());
 
     pCharacteristic3 = pService->createCharacteristic(
@@ -135,7 +112,7 @@ void InterfaceBLE::configure(uint8_t* package, uint8_t package_size,
 
     pCharacteristic3->setCallbacks(new CharacteristicCallbacks());
 
-    DEBUG_BLE("Characteristic3 UUID: ");
+    DEBUG_IDENTIFIER("Characteristic3 UUID: ");
     DEBUG_LN(pCharacteristic3->getUUID().toString().c_str());
 
     pCharacteristic1->setValue(package, packageCharSize);
@@ -165,7 +142,8 @@ void InterfaceBLE::setServerCallbacks(void (*onConnect)(void),
 
 bool InterfaceBLE::StartServiceAdvertising() {
     if (!configured) {
-        DEBUG_LN_BLE("Could not start advertising, first configure ble!");
+        DEBUG_LN_IDENTIFIER(
+            "Could not start advertising, first configure ble!");
         return false;
     }
     pAdvertising->start();
@@ -174,7 +152,7 @@ bool InterfaceBLE::StartServiceAdvertising() {
 
 bool InterfaceBLE::StopServiceAdvertising() {
     if (!configured) {
-        DEBUG_LN_BLE("Could not stop advertising, first configure ble!");
+        DEBUG_LN_IDENTIFIER("Could not stop advertising, first configure ble!");
         return false;
     }
     pAdvertising->stop();
@@ -183,7 +161,8 @@ bool InterfaceBLE::StopServiceAdvertising() {
 
 bool InterfaceBLE::sendNotifyChar2(uint8_t* package) {
     if (!configured) {
-        DEBUG_LN_BLE("Could not notify Characteristic 2, first configure ble!");
+        DEBUG_LN_IDENTIFIER(
+            "Could not notify Characteristic 2, first configure ble!");
         return false;
     }
     pCharacteristic2->setValue(package, packageCharSize);

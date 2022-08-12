@@ -79,11 +79,10 @@ class RoboHeart {
     RoboHeartDRV8836 motor0;
     RoboHeartDRV8836 motor1;
     RoboHeartDRV8836 motor2;
+    MPU6050 mpu;
 
    private:
     Stream* _debug;
 };
-
-extern MPU6050 mpu;
 
 #endif

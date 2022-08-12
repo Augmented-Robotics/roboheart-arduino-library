@@ -11,20 +11,21 @@
     "ROBOHEART"  // Define identifier before including DebuggerMsgs.h
 #include "DebuggerMsgs.h"
 
-RoboHeart::RoboHeart() { _debug = NULL; }
+RoboHeart::RoboHeart() : mpu(MPU6050(Wire)) { _debug = NULL; }
 
 RoboHeart::RoboHeart(Stream& debug)
     : _debug(&debug),
       motor0(RoboHeartDRV8836(debug)),
       motor1(RoboHeartDRV8836(debug)),
       motor2(RoboHeartDRV8836(debug)),
-      stepper(RoboHeartStepperMotor(debug)) {}
+      stepper(RoboHeartStepperMotor(debug)),
+      mpu(MPU6050(Wire)) {}
 
 RoboHeart::~RoboHeart(void) {}
 
 bool RoboHeart::begin(bool calc_mpu_offsets) {
     Wire.begin();
-    // MPU6050 SETUP
+
     mpu.setAddress(MPU6050_I2C_ADDR);
     byte status = mpu.begin();
 
@@ -180,5 +181,3 @@ void RoboHeart::setGyroOffsets(float x, float y, float z) {
 void RoboHeart::setAccOffsets(float x, float y, float z) {
     return mpu.setAccOffsets(x, y, z);
 }
-
-MPU6050 mpu(Wire);
