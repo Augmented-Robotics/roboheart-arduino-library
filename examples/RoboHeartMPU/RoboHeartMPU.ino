@@ -1,5 +1,5 @@
 /* This example shows how to get information from
- * the built-in IMU
+ * the built-in IMU.
  */
 
 #include <RoboHeart.h>

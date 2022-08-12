@@ -1,10 +1,10 @@
 /* This example shows how to balance and control
- * the Balancing Bot made with RoboHeart
- * board
+ * the Balancing Bot made with the RoboHeart
+ * board.
  *
  * Setup for the Augmented Reality Smartphone App
  * is provided. It establishes connection
- * through Bluetooth
+ * through Bluetooth.
  */
 
 #include <RoboHeart.h>

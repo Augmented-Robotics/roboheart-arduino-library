@@ -1,6 +1,6 @@
 /* This example shows how to balance
- * the Balancing Bot made with RoboHeart
- * board
+ * the Balancing Bot made with the RoboHeart
+ * board.
  */
 
 #include <RoboHeart.h>

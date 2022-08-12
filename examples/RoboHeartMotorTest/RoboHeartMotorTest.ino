@@ -1,5 +1,5 @@
 /* This example shows how to control the built-in
- * DC motor drivers
+ * DC motor drivers.
  */
 
 #include <RoboHeart.h>

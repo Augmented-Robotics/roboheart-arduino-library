@@ -1,5 +1,5 @@
-/* This example shows minimal running
- * instance of the library
+/* This example shows the minimal running
+ * instance of the library.
  */
 
 #include <RoboHeart.h>

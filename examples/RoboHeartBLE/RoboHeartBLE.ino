@@ -1,5 +1,5 @@
 /* This example shows how to control the car with
- * the Smartphone Augmented Reality App through Bluetooth
+ * the Smartphone Augmented Reality App through Bluetooth.
  */
 
 #include <RoboHeart.h>

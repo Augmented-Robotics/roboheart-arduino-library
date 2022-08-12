@@ -1,5 +1,5 @@
 /* This example shows how to control the built-in
- * Stepper motor drivers
+ * Stepper motor drivers.
  */
 
 #include <RoboHeart.h>
