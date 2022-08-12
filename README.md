@@ -16,13 +16,14 @@ Highlight of the board features:
 <img src="images/RoboHeart_Hercules_PINS.jpg" width="800"/>
 
 ### Library Installation
+1. Install MPU6050_light library through [Arduino Library Manager](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries)
 
-1. Install ESP32 Arduino as described in [Espressif page](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html).
+2. Install ESP32 Arduino as described in [Espressif page](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html).
 
-2. Further download RoboHeart library using Git manager or through the Download ZIP option in GitHub:  
+3. Further download RoboHeart library using Git manager or through the Download ZIP option in GitHub:  
     <img src="images/Lib_installation.png" width="250"/>
 
-3. Place folder or unpack it in the default Arduino library path:
+4. Place folder or unpack it in the default Arduino library path:
     ```
     C:\Users\<Your_Username>\Documents\Arduino\libraries\       # For Windows users
     /home/<Your_Username>/Arduino/libraries/                    # For Ubuntu users
