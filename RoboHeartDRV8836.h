@@ -1,34 +1,44 @@
 /*!
- *  @file RoboHeartDRV8836.h
+ *  @file RoboHeartDRB8836.h
  *
+ * 	Arduino library for the RoboHeart.
  *
- *	MIT license (see license.txt)
  */
-#ifndef _ROBOHEARTDRV8836_H
-#define _ROBOHEARTDRV8836_H
+#ifndef RoboHeartDRV8836_h
+#define RoboHeartDRV8836_h
 
-#include "pins.h"
 #include <Arduino.h>
 
-class RoboHeartDRV8836
-{
-    public:
-        RoboHeartDRV8836();
-        ~RoboHeartDRV8836();
-        void begin(int modePin, int in1Pin, int in2Pin, int nsleepPin);
-        void sleep(bool sleep=true);
-        void coast();
-        void forward(uint8_t speed);
-        void reverse(uint8_t speed);
-        void brake();
-        uint8_t getSpeed();
+#include "pins_RoboHeart.h"
 
-    private:
-        int _modePin = -1;
-        int _in1Pin = -1;
-        int _in2Pin = -1;
-        int _nsleepPin = -1;
-        uint8_t _speed = 0;
+class RoboHeartDRV8836 {
+   public:
+    RoboHeartDRV8836();
+    RoboHeartDRV8836(Stream& debug);
+    ~RoboHeartDRV8836();
+    void begin(int in1Pin, int in2Pin, int nsleepPin, int in1Channel = 0,
+               int in2Channel = 1);
+    void sleep(bool sleep = true);
+    void coast();
+    void forward(int speed);
+    void reverse(int speed);
+    void configPWM(int freq = 100000, int resolution = 8);
+    void brake();
+    int getSpeed();
+    int getMaxDutyCycle();
+
+   private:
+    Stream* _debug = NULL;
+    int _in1Pin = -1;
+    int _in2Pin = -1;
+    int _nSleepPin = -1;
+    int _speed = 0;
+    int _pwmFreq = -1;
+    int _pwmResolution = -1;
+    int _pwmMaxDutyCycle = 256;
+
+    int _in1Channel = 0;  // TODO: Remove on the new arduino-esp32 release
+    int _in2Channel = 1;
 };
 
 #endif

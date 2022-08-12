@@ -1,90 +1,105 @@
+/*!
+ *  @file RoboHeartDRV8836.cpp
+ *
+ * 	Arduino library for the RoboHeart.
+ *
+ */
 
 #include "RoboHeartDRV8836.h"
 
-RoboHeartDRV8836::RoboHeartDRV8836()
-{
-   
+#define FILE_IDENTIFIER \
+    "DRV8836"  // Define identifier before including DebuggerMsgs.h
+#include "DebuggerMsgs.h"
+
+int clampSpeed(int speed, int minSpeed, int maxSpeed) {
+    if (speed < minSpeed) {
+        return minSpeed;
+    } else if (speed > maxSpeed) {
+        return maxSpeed;
+    } else {
+        return speed;
+    }
 }
 
-RoboHeartDRV8836::~RoboHeartDRV8836()
-{
-   
-}
+RoboHeartDRV8836::RoboHeartDRV8836() {}
+RoboHeartDRV8836::RoboHeartDRV8836(Stream& debug) : _debug(&debug) {}
 
- void RoboHeartDRV8836::begin(int modePin, int in1Pin, int in2Pin, int nsleepPin)
- {
-    _modePin = modePin;
+RoboHeartDRV8836::~RoboHeartDRV8836() {}
+
+void RoboHeartDRV8836::begin(int in1Pin, int in2Pin, int nsleepPin,
+                             int in1Channel, int in2Channel) {
+    _nSleepPin = nsleepPin;
+
     _in1Pin = in1Pin;
     _in2Pin = in2Pin;
-    _nsleepPin = nsleepPin;
-    pinMode(_in1Pin, OUTPUT);//  PHASE/IN1
-    digitalWrite(_in1Pin,LOW);
-    pinMode(_in2Pin, OUTPUT);//  ENABLE/IN2
-    digitalWrite(_in2Pin,LOW); 
-    pinMode(_modePin, OUTPUT);//  MODE
-    // MODE PIN LOW --> IN/IN MODE
-    // MODE PIN HIGH --> PHASE/ENABLE MODE
-    // WE USE IN/IN MODE, BECAUSE IT SUPPORTS COASTING
-    digitalWrite(_modePin,LOW);
-    pinMode(_nsleepPin, OUTPUT);//  nSLEEP
-    digitalWrite(_nsleepPin,HIGH);
- }
 
- void RoboHeartDRV8836::sleep(bool sleep)
- {
-    analogWrite(_in1Pin, 0);
-    analogWrite(_in2Pin, 0);
-    digitalWrite(_in1Pin, LOW);
-    digitalWrite(_in2Pin, LOW);
-    digitalWrite(_nsleepPin,!sleep);   
- }
+    _in1Channel = in1Channel;
+    _in2Channel = in2Channel;
 
+    // Configure the pins
+    pinMode(_in1Pin, OUTPUT);
+    pinMode(_in2Pin, OUTPUT);
 
- void RoboHeartDRV8836::coast()
- {
-    analogWrite(_in1Pin, 0);
-    analogWrite(_in2Pin, 0);
-    digitalWrite(_in1Pin, LOW);
-    digitalWrite(_in2Pin, LOW);
-    
- }
+    // Ensure that the PWM channel has been assigned to each pin
+    ledcAttachPin(_in1Pin, _in1Channel);
+    ledcAttachPin(_in2Pin, _in2Channel);
 
-void RoboHeartDRV8836::forward(uint8_t speed)
-{
-    digitalWrite(_in2Pin, LOW);
-     _speed = speed;
-    
-    if(speed >= 254)
-    {
-        digitalWrite(_in1Pin, HIGH);
-        return;
-    }
-    analogWrite(_in1Pin, speed);
+    // Calling only once the channels are set
+    configPWM();
+
+    // IN/IN MODE BY DEFAULT, IT SUPPORTS COASTING
+    pinMode(_nSleepPin, OUTPUT);  //  nSLEEP
+    digitalWrite(_nSleepPin, HIGH);
 }
 
-void RoboHeartDRV8836::reverse(uint8_t speed)
-{
-    digitalWrite(_in1Pin, LOW);
-    _speed = speed;
-    
-    if(speed >= 254)
-    {
-        digitalWrite(_in2Pin, HIGH);
-        return;
-    }
-    analogWrite(_in2Pin, speed);
+void RoboHeartDRV8836::configPWM(int freq, int resolution) {
+    RETURN_WARN_IF_EQUAL(_in1Pin, -1)
+
+    _pwmFreq = freq;
+    _pwmResolution = resolution;
+
+    ledcSetup(_in1Channel, _pwmFreq, _pwmResolution);
+    ledcSetup(_in2Channel, _pwmFreq, _pwmResolution);
+
+    _pwmMaxDutyCycle = (int)(pow(2, _pwmResolution) - 1);
 }
 
-void RoboHeartDRV8836::brake()
-{
-    analogWrite(_in1Pin, 0);
-    analogWrite(_in2Pin, 0);
-    digitalWrite(_in1Pin, HIGH);
-    digitalWrite(_in2Pin, HIGH);
-    _speed = 0;    
+void RoboHeartDRV8836::sleep(bool sleep) {
+    RETURN_WARN_IF_EQUAL(_in1Pin, -1)
+
+    ledcWrite(_in1Channel, 0);
+    ledcWrite(_in2Channel, 0);
+    digitalWrite(_nSleepPin, !sleep);
 }
 
-uint8_t RoboHeartDRV8836::getSpeed()
-{
-    return _speed;
+void RoboHeartDRV8836::coast() {
+    RETURN_WARN_IF_EQUAL(_in1Pin, -1)
+
+    ledcWrite(_in1Channel, 0);
+    ledcWrite(_in2Channel, 0);
 }
+
+void RoboHeartDRV8836::forward(int speed) {
+    RETURN_WARN_IF_EQUAL(_in1Pin, -1)
+    _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
+    ledcWrite(_in1Channel, _speed);
+    ledcWrite(_in2Channel, 0);
+}
+
+void RoboHeartDRV8836::reverse(int speed) {
+    RETURN_WARN_IF_EQUAL(_in1Pin, -1)
+    _speed = clampSpeed(speed, 0, _pwmMaxDutyCycle);
+    ledcWrite(_in1Channel, 0);
+    ledcWrite(_in2Channel, _speed);
+}
+
+void RoboHeartDRV8836::brake() {
+    RETURN_WARN_IF_EQUAL(_in1Pin, -1)
+
+    ledcWrite(_in1Channel, _pwmMaxDutyCycle);
+    ledcWrite(_in2Channel, _pwmMaxDutyCycle);
+}
+
+int RoboHeartDRV8836::getSpeed() { return _speed; }
+
+int RoboHeartDRV8836::getMaxDutyCycle() { return _pwmMaxDutyCycle; }

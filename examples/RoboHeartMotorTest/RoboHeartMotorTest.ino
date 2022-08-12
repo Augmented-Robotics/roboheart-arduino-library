@@ -1,32 +1,38 @@
+/* This example shows how to control the built-in
+ * DC motor drivers.
+ */
+
 #include <RoboHeart.h>
 
-RoboHeart heart = RoboHeart();
+RoboHeart heart = RoboHeart(Serial);
 
-void setup()
-{
-    
+void setup() {
     Serial.begin(115200);
-    Serial.println("RoboHeart Motor Test");
+
+    // Set up the RoboHeart
     heart.begin();
-    delay(1000);
+
+    Serial.println("RoboHeart DC Motor Demo");
 }
 
-void loop()
-{
-    Serial.println("Motor0");
-    heart.motor0_reverse(100);
-    delay(5000); 
-    heart.motor0_coast();
+void loop() {
+    // Run motorA
+    Serial.println("motorA");
+    heart.motorA.forward(100);
+    delay(2000);
+    heart.motorA.coast();
 
-    Serial.println("Motor1");
-    heart.motor1_reverse(127);
-    delay(5000); 
-    heart.motor1_coast();
+    // Run motorB
+    Serial.println("motorB");
+    heart.motorB.forward(127);
+    delay(2000);
+    heart.motorB.coast();
 
-    Serial.println("Motor2");
-    heart.motor2_reverse(255);
-    delay(5000); 
-    heart.motor2_coast();
-    
+    // Run motorC
+    Serial.println("motorC");
+    heart.motorC.forward(255);
+    delay(2000);
+    heart.motorC.coast();
+
     heart.beat();
 }
