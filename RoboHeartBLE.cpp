@@ -75,7 +75,7 @@ class ServerCallbacks : public BLEServerCallbacks {
 void InterfaceBLE::begin(uint8_t* package, uint8_t packageSize,
                              uuidConfigType* uuidsConfig) {
     DEBUG_LN_IDENTIFIER("Initialization");
-    BLEDevice::init("ESP_GATT_SERVER");
+    BLEDevice::init("ESP_GATT_SERVER_RH");
     _Server = BLEDevice::createServer();
 
     if (uuidsConfig != NULL) {
@@ -166,5 +166,11 @@ bool InterfaceBLE::sendNotifyChar2(uint8_t* package) {
     
     _characteristic2->setValue(package, _packageCharSize);
     _characteristic2->notify();
+    return true;
+}
+bool InterfaceBLE::sendNotifyChar3(uint8_t* package){
+    RETURN_VAL_WARN_IF_EQUAL(_configured, false, false)
+    
+    _characteristic3->setValue(package, _packageCharSize);
     return true;
 }

@@ -22,7 +22,7 @@ class RoboHeartDRV8836 {
     void coast();
     void forward(int speed);
     void reverse(int speed);
-    void configPWM(int freq = 100000, int resolution = 8);
+    void configPWM(int freq = 25, int resolution = 8);
     void brake();
     int getSpeed();
     int getMaxDutyCycle();
