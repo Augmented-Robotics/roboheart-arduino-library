@@ -45,6 +45,7 @@ class InterfaceBLE {
     bool startServiceAdvertising();
     bool stopServiceAdvertising();
     bool sendNotifyChar2(uint8_t* package);
+    bool sendNotifyChar3(uint8_t* package);
 
    private:
     static uuidConfigType* _uuidsBLE;

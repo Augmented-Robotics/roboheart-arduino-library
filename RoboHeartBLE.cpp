@@ -168,3 +168,9 @@ bool InterfaceBLE::sendNotifyChar2(uint8_t* package) {
     _characteristic2->notify();
     return true;
 }
+bool InterfaceBLE::sendNotifyChar3(uint8_t* package){
+    RETURN_VAL_WARN_IF_EQUAL(_configured, false, false)
+    
+    _characteristic3->setValue(package, _packageCharSize);
+    return true;
+}
