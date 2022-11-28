@@ -27,5 +27,6 @@
 #define GSM_RTS 14
 #define GSM_TX TXD1
 #define GSM_RX RXD1
+#define BATTERY_PIN 36
 
 #endif
