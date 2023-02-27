@@ -1,5 +1,10 @@
 /* Hello World Example with the LED.
  * Toggel LED every half second. 
+ * 
+ * Created  30/01/2022
+ * By Augmented Robotics 
+ * 
+ * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
  */
 
 #include <RoboHeart.h>

@@ -1,5 +1,10 @@
 /* This example shows how to control the built-in
  * DC motor drivers.
+ *
+ * Created  30/01/2022
+ * By Augmented Robotics
+ * 
+ * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
  */
 
 #include <RoboHeart.h>

@@ -8,6 +8,14 @@
  * 
  * Use button to set the stable vertical position
  * of the Balancing Bot.
+ * 
+ * Building a One-board balancing bot instructions can be found here:
+ * https://www.instructables.com/A-One-board-Balancing-Bot-With-a-RoboHeart-Electro/
+ * 
+ * Created  30/01/2022
+ * By Augmented Robotics
+ * 
+ * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
  */
 
 #include <RoboHeart.h>

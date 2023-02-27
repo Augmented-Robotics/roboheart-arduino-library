@@ -1,5 +1,13 @@
 /* This example shows how to control the car with
  * the Smartphone Augmented Reality App through Bluetooth.
+ *
+ * RoboHeart installation instructions can be found here:
+ * https://www.instructables.com/How-to-Install-Your-RoboHeart-Hercules-Into-a-RC-C/
+ * 
+ * Created  30/01/2022
+ * By Augmented Robotics
+ * 
+ * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
  */
 
 #include <RoboHeart.h>
