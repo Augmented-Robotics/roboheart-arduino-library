@@ -7,7 +7,6 @@ Highlight of the board features:
 - 1s Lipo Battery Full Support (charging, overcharge, overdischarge, usage as power source, reverse battery protection)
 - Three DC motors control or One Stepper motor control
 - JTAG connector Debugging
-- Interface to the Roboheart Vela board faturing SIM7020E
 - USB-C connector with Auto-program feature
 - Grove connectors for UART and I2C
 
