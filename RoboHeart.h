@@ -9,14 +9,14 @@
 #define RoboHeart_h
 
 #include <Arduino.h>
-#include <MPU6050_light.h>
+#include <SparkFunLSM6DS3.h>
 #include <Wire.h>
 
 #include "RoboHeartDRV8836.h"
 #include "RoboHeartStepperMotor.h"
 #include "pins_RoboHeart.h"
 
-#define MPU6050_I2C_ADDR 0x69 // AD0 HIGH
+#define LSM6DS3_I2C_ADDR 0x6B // or 0x6A - Address is defined in Library
 
 typedef struct {
     int command;
@@ -26,12 +26,12 @@ typedef struct {
 
 class RoboHeart {
    public:
+    
     RoboHeart();
     RoboHeart(Stream& debug);
     ~RoboHeart();
-
-    bool begin(bool mpuOffsetsCalc = true);
-    void beat();
+   
+    bool begin();
 
     char* handleMotorMessage(MotorMSGType motorMSG);
     void setDirectionTurnMotors(RoboHeartDRV8836& directionMotor, RoboHeartDRV8836& turnMotor);
@@ -40,7 +40,8 @@ class RoboHeart {
     RoboHeartDRV8836 motorA;
     RoboHeartDRV8836 motorB;
     RoboHeartDRV8836 motorC;
-    MPU6050 mpu;
+    LSM6DS3 imu;
+   
 
    private:
     Stream* _debug = NULL;

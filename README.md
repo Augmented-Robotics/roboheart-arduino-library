@@ -3,7 +3,7 @@ Library for the [RoboHeart Hercules Board](https://roboheart.de).
 
 Highlight of the board features:
 - ESP32 microcontroller
-- IMU - MPU6050
+- IMU - LSM6DS3
 - 1s Lipo Battery Full Support (charging, overcharge, overdischarge, usage as power source, reverse battery protection)
 - Three DC motors control or One Stepper motor control
 - JTAG connector Debugging
@@ -15,7 +15,7 @@ Highlight of the board features:
 <img src="images/RoboHeart_Hercules_PINS.jpg" width="800"/>
 
 ### Library Installation
-1. Install MPU6050_light library through [Arduino Library Manager](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries)
+1. Install [SparkFunLSM6DS3](https://github.com/sparkfun/SparkFun_LSM6DS3_Arduino_Library/tree/master) library through [Arduino Library Manager](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries)
 
 2. Install ESP32 Arduino as described in [Espressif page](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html).
 

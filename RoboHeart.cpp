@@ -21,40 +21,34 @@
 #define MOTOR_C_CHANNEL1 4
 #define MOTOR_C_CHANNEL2 5
 
-RoboHeart::RoboHeart() : mpu(MPU6050(Wire)) {}
+
+RoboHeart::RoboHeart() {}
 
 RoboHeart::RoboHeart(Stream& debug)
     : _debug(&debug),
       motorA(RoboHeartDRV8836(debug)),
       motorB(RoboHeartDRV8836(debug)),
       motorC(RoboHeartDRV8836(debug)),
-      stepper(RoboHeartStepperMotor(debug)),
-      mpu(MPU6050(Wire)) {}
+      stepper(RoboHeartStepperMotor(debug)) {}
+    
 
 RoboHeart::~RoboHeart(void) {}
 
-bool RoboHeart::begin(bool mpuOffsetsCalc) {
+bool RoboHeart::begin() {
+    
     Wire.setPins(IMU_SDA, IMU_SCL);
     Wire.begin();
-
-    mpu.setAddress(MPU6050_I2C_ADDR);
-    byte status = mpu.begin();
+    
+    byte status = imu.begin();
 
     if (status != 0) {
-        // try one more time after a delay (MPU takes time to power-up)
+        // try one more time after a delay
         delay(500);
-        status = mpu.begin();
+        status = imu.begin();
     }
 
     DEBUG_IDENTIFIER("MPU6050 status: ");
     DEBUG_LN(status);
-
-    if (status == 0 && mpuOffsetsCalc) {
-        DEBUG_LN_IDENTIFIER("Calculating offsets, do not move MPU6050");
-        delay(1000);
-        mpu.calcOffsets(true, true);  // gyro and accelero
-        DEBUG_LN_IDENTIFIER("Done!\n");
-    }
 
     motorA.begin(MOTOR_A_IN1, MOTOR_A_IN2, SLEEP_MOTOR_ABC, MOTOR_A_CHANNEL1,
                  MOTOR_A_CHANNEL2);
@@ -70,7 +64,6 @@ bool RoboHeart::begin(bool mpuOffsetsCalc) {
     return true;
 }
 
-void RoboHeart::beat() { mpu.update(); }
 
 void RoboHeart::setDirectionTurnMotors(RoboHeartDRV8836& directionMotor,
                                        RoboHeartDRV8836& turnMotor) {
