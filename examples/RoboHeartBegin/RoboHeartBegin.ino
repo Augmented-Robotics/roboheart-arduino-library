@@ -17,6 +17,4 @@ void setup() {
 }
 
 void loop() {
-    // Give computing time to the RoboHeart
-    heart.beat();
 }

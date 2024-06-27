@@ -38,9 +38,6 @@ void toggleLED() {
 }
 
 void loop() {
-    // Give computing time to the RoboHeart
-    heart.beat();
-    
     // LED indicator
     toggleLED();
     delay(500);
