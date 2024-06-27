@@ -21,6 +21,35 @@
 #define MOTOR_C_CHANNEL1 4
 #define MOTOR_C_CHANNEL2 5
 
+LSM6DS3 RoboHeart::imu;
+float RoboHeart::_rotationX;
+float RoboHeart::_driftX;
+float RoboHeart::_rotationY;
+float RoboHeart::_driftY;
+float RoboHeart::_rotationZ;
+float RoboHeart::_driftZ;
+
+void RoboHeart::rotationCallBack()
+{
+    _rotationX += (imu.readFloatGyroX() - _driftX)*0.01;
+    //_rotationY += (imu.readFloatGyroY() - _driftY)*0.005;
+    //_rotationZ += (imu.readFloatGyroZ() - _driftZ)*0.005;
+    if (_rotationX > 360) {
+      _rotationX -= 360;
+    } else if (_rotationX < 0) {
+      _rotationX += 360;
+    }
+    /*if (_rotationY > 360) {
+      _rotationY -= 360;
+    } else if (_rotationY < 0) {
+      _rotationY += 360;
+    }
+    if (_rotationZ > 360) {
+      _rotationZ -= 360;
+    } else if (_rotationZ < 0) {
+      _rotationZ += 360;
+    }*/
+}
 
 RoboHeart::RoboHeart() {}
 
@@ -64,6 +93,13 @@ bool RoboHeart::begin() {
     return true;
 }
 
+void RoboHeart::setAutomaticRotation(){
+    calculateDiff();
+    while (isCalibrated() == 0) {}  
+    
+    PeriodicTimer t = PeriodicTimer(rotationCallBack, 10000);
+    t.start();
+}
 
 void RoboHeart::setDirectionTurnMotors(RoboHeartDRV8836& directionMotor,
                                        RoboHeartDRV8836& turnMotor) {
@@ -124,4 +160,32 @@ char* RoboHeart::handleMotorMessage(MotorMSGType motorMSG) {
             break;
     }
     return response;
+}
+
+
+void RoboHeart::calculateDiff(int timeout_ms){
+    Serial.println("Drift");
+    for (int i = 0; i < timeout_ms; i++) {
+    _driftX += imu.readFloatGyroX() / timeout_ms;
+    _driftY += imu.readFloatGyroY() / timeout_ms;
+    _driftZ += imu.readFloatGyroZ() / timeout_ms;
+    delay(1);
+  }
+  Serial.println(_driftX);
+  Serial.println(_driftY);
+  Serial.println(_driftZ);
+}
+
+bool RoboHeart::isCalibrated(int timeout_ms) {
+    unsigned long time = millis();
+    long counter = 0;
+    while ((millis() - time) < timeout_ms) {
+        if (abs(imu.readFloatGyroX() - _driftX) > TRESHOLD || abs(imu.readFloatGyroY() - _driftY) > TRESHOLD || abs(imu.readFloatGyroZ() - _driftZ) > TRESHOLD) {
+            counter++;
+        }
+    delay(1);
+    }
+    
+    Serial.println(counter);
+    return (counter < (timeout_ms / 5));
 }

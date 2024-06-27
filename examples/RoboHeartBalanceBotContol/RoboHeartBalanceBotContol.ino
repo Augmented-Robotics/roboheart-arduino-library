@@ -256,8 +256,6 @@ void setup() {
 }
 
 void loop() {
-    // Give computing time to the RoboHeart
-    heart.beat();
 
     // Perform PID control every CONTROL_TICK_PERIOD_US*PID_CONTROL_PRESCALER
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
