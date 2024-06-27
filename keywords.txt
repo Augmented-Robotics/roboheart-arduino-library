@@ -1,0 +1,79 @@
+########################################################
+# Syntax Coloring Map for RoboHeart Library #
+########################################################
+# Class
+###################################################################
+
+RoboHeart   KEYWORD1
+InterfaceBLE    KEYWORD1
+RoboHeartDRV8836    KEYWORD1
+RoboHeartStepperMotor   KEYWORD1
+PeriodicTimer   KEYWORD1
+
+###################################################################
+# Methods and Functions
+###################################################################
+
+begin   KEYWORD2
+handleMotorMessage  KEYWORD2
+setDirectionTurnMotors  KEYWORD2
+serverOnConnectInvCallback  KEYWORD2
+serverOnDisconnectInvCallback   KEYWORD2
+charOnWriteInvCallback  KEYWORD2
+setCharacteristicsCallbacks KEYWORD2
+setServerCallbacks  KEYWORD2
+startServiceAdvertising KEYWORD2
+stopServiceAdvertising  KEYWORD2
+sendNotifyChar2 KEYWORD2
+sendNotifyChar3 KEYWORD2
+sleep   KEYWORD2
+coast   KEYWORD2
+forward KEYWORD2
+reverse KEYWORD2
+configPWM   KEYWORD2
+brake   KEYWORD2
+getSpeed    KEYWORD2
+getMaxDutyCycle KEYWORD2
+executeHalfStep KEYWORD2
+stepForward     KEYWORD2
+stepReverse KEYWORD2
+start   KEYWORD2
+stop    KEYWORD2
+setTimePeriod   KEYWORD2
+
+###################################################################
+# Constants
+###################################################################
+
+MOTOR_A_IN1 LITERAL1
+MOTOR_A_IN2 LITERAL1
+MOTOR_B_IN1 LITERAL1
+MOTOR_B_IN2 LITERAL1
+MOTOR_C_IN1 LITERAL1
+MOTOR_C_IN2 LITERAL1
+SLEEP_MOTOR_ABC LITERAL1
+LED_ROBOHEART   LITERAL1
+BUTTON_ROBOHEART    LITERAL1
+IMU_SDA LITERAL1
+IMU_SCL LITERAL1
+RXD1    LITERAL1
+TXD1    LITERAL1
+GSM_PWRKEY  LITERAL1
+GSM_DTR LITERAL1
+GSM_CTS LITERAL1
+GSM_RTS LITERAL1
+GSM_TX  LITERAL1
+GSM_RX  LITERAL1
+BATTERY_PIN LITERAL1
+LSM6DS3_I2C_ADDR    LITERAL1
+MOTOR_A_CHANNEL1    LITERAL1
+MOTOR_A_CHANNEL2    LITERAL1
+MOTOR_B_CHANNEL1    LITERAL1
+MOTOR_B_CHANNEL2    LITERAL1
+MOTOR_C_CHANNEL1    LITERAL1
+MOTOR_C_CHANNEL2    LITERAL1
+RH_APP_SERVICE_UUID LITERAL1
+RH_APP_CHARACTERISTIC_UUID1 LITERAL1
+RH_APP_CHARACTERISTIC_UUID2 LITERAL1
+RH_APP_CHARACTERISTIC_UUID3 LITERAL1
+STEPPER_MOTOR_MAX_STEPS LITERAL1
