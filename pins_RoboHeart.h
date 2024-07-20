@@ -12,6 +12,9 @@
 
 #define SLEEP_MOTOR_ABC 2  //  nSLEEP 
 
+#define FAULT_MOTOR_AB 34  //  nSLEEP 
+#define FAULT_MOTOR_C 35  //  nSLEEP 
+
 #define LED_ROBOHEART 13  
 #define BUTTON_ROBOHEART 0
 
