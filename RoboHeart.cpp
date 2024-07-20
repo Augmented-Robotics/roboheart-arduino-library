@@ -29,26 +29,46 @@ float RoboHeart::_driftY;
 float RoboHeart::_rotationZ;
 float RoboHeart::_driftZ;
 
-void RoboHeart::rotationCallBack()
+void RoboHeart::rotationCallBack(void *pvParameter)
 {
-    _rotationX += (imu.readFloatGyroX() - _driftX)*0.01;
-    //_rotationY += (imu.readFloatGyroY() - _driftY)*0.005;
-    //_rotationZ += (imu.readFloatGyroZ() - _driftZ)*0.005;
-    if (_rotationX > 360) {
-      _rotationX -= 360;
-    } else if (_rotationX < 0) {
-      _rotationX += 360;
+    unsigned long startTime = millis();
+    
+    float prev_angular_velocityX = 0;
+    float prev_angular_velocityY = 0;
+    float prev_angular_velocityZ = 0;
+    while(true){
+        unsigned long actualTime = millis();
+        unsigned long diff = actualTime - startTime; 
+        if(diff > 5){
+            float angular_velocityX = imu.readFloatGyroX() - _driftX;
+            float angular_velocityY = imu.readFloatGyroY() - _driftY;
+            float angular_velocityZ = imu.readFloatGyroZ() - _driftZ;
+
+            _rotationX += ((prev_angular_velocityX+angular_velocityX)/2)*(0.001*diff);
+            _rotationY += ((prev_angular_velocityY+angular_velocityY)/2)*(0.001*diff);
+            _rotationZ += ((prev_angular_velocityZ+angular_velocityZ)/2)*(0.001*diff);
+
+            prev_angular_velocityX = angular_velocityX;
+            prev_angular_velocityY = angular_velocityY;
+            prev_angular_velocityZ = angular_velocityZ;
+            if (_rotationX > 360) {
+            _rotationX -= 360;
+            } else if (_rotationX < 0) {
+            _rotationX += 360;
+            }
+            if (_rotationY > 360) {
+            _rotationY -= 360;
+            } else if (_rotationY < 0) {
+            _rotationY += 360;
+            }
+            if (_rotationZ > 360) {
+            _rotationZ -= 360;
+            } else if (_rotationZ < 0) {
+            _rotationZ += 360;
+            }
+            startTime = actualTime;
+        }
     }
-    /*if (_rotationY > 360) {
-      _rotationY -= 360;
-    } else if (_rotationY < 0) {
-      _rotationY += 360;
-    }
-    if (_rotationZ > 360) {
-      _rotationZ -= 360;
-    } else if (_rotationZ < 0) {
-      _rotationZ += 360;
-    }*/
 }
 
 RoboHeart::RoboHeart() {}
@@ -76,7 +96,7 @@ bool RoboHeart::begin() {
         status = imu.begin();
     }
 
-    DEBUG_IDENTIFIER("MPU6050 status: ");
+    DEBUG_IDENTIFIER("LSM6DS3 status: ");
     DEBUG_LN(status);
 
     motorA.begin(MOTOR_A_IN1, MOTOR_A_IN2, SLEEP_MOTOR_ABC, MOTOR_A_CHANNEL1,
@@ -95,10 +115,16 @@ bool RoboHeart::begin() {
 
 void RoboHeart::setAutomaticRotation(){
     calculateDiff();
-    while (isCalibrated() == 0) {}  
+    int counter = 0;
+    while (isCalibrated() == 0) {
+        counter++;
+        if(counter > 3){
+            calculateDiff();
+            counter = 0;
+        }
+    }  
     
-    PeriodicTimer t = PeriodicTimer(rotationCallBack, 10000);
-    t.start();
+    xTaskCreate(&rotationCallBack, "RotationTask", 2048, NULL, 5, NULL);
 }
 
 void RoboHeart::setDirectionTurnMotors(RoboHeartDRV8836& directionMotor,
@@ -165,6 +191,9 @@ char* RoboHeart::handleMotorMessage(MotorMSGType motorMSG) {
 
 void RoboHeart::calculateDiff(int timeout_ms){
     Serial.println("Drift");
+    _driftX = 0;
+    _driftY = 0;
+    _driftZ = 0;
     for (int i = 0; i < timeout_ms; i++) {
     _driftX += imu.readFloatGyroX() / timeout_ms;
     _driftY += imu.readFloatGyroY() / timeout_ms;
@@ -187,5 +216,17 @@ bool RoboHeart::isCalibrated(int timeout_ms) {
     }
     
     Serial.println(counter);
-    return (counter < (timeout_ms / 5));
+    return (counter < (timeout_ms / 4));
+}
+
+float RoboHeart::getRotationX(){
+     return this->_rotationX;
+}
+
+float RoboHeart::getRotationY(){
+     return this->_rotationY;
+}
+
+float RoboHeart::getRotationZ(){
+     return this->_rotationZ;
 }

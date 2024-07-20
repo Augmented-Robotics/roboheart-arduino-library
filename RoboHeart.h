@@ -11,6 +11,8 @@
 #include <Arduino.h>
 #include <SparkFunLSM6DS3.h>
 #include <Wire.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 #include "RoboHeartDRV8836.h"
 #include "RoboHeartStepperMotor.h"
@@ -39,9 +41,9 @@ class RoboHeart {
 
     char* handleMotorMessage(MotorMSGType motorMSG);
     void setDirectionTurnMotors(RoboHeartDRV8836& directionMotor, RoboHeartDRV8836& turnMotor);
-    inline float getRotationX() {return this->_rotationX;}
-    inline float getRotationY() {return this->_rotationY;}
-    inline float getRotationZ() {return this->_rotationZ;}
+    float getRotationX();
+    float getRotationY();
+    float getRotationZ();
 
     RoboHeartStepperMotor stepper;
     RoboHeartDRV8836 motorA;
@@ -55,7 +57,8 @@ class RoboHeart {
     static float _driftY;
     static float _rotationZ;
     static float _driftZ;
-    static void rotationCallBack();
+    static bool tick;
+    static void rotationCallBack(void *pvParameter);
 
    private:
     Stream* _debug = NULL;
