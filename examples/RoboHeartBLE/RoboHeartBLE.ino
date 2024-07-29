@@ -135,16 +135,14 @@ void setup() {
 }
 
 void loop() {
-    // Give computing time to the RoboHeart
-    heart.beat();
+
     int percent = battery_percent();
     // Send some information to the ble
     if (bleDeviceConnected) {
         blePackage[0]++;
         ble.sendNotifyChar2(blePackage);
         ble.sendNotifyChar3((uint8_t *)(&percent));
-        delay(
-            3);  // bluetooth stack will go into congestion, if too many packets
+        delay(3);  // bluetooth stack will go into congestion, if too many packets
                  // are sent, in 6 hours test we were able to go as low as 3ms
     }
 

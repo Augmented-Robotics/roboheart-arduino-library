@@ -38,6 +38,4 @@ void loop() {
     heart.motorC.forward(255);
     delay(2000);
     heart.motorC.coast();
-
-    heart.beat();
 }

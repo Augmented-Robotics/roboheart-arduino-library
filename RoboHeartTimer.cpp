@@ -13,40 +13,29 @@
 
 PeriodicTimer::PeriodicTimer(void (*callback)(void),
                              uint64_t timerPeriodMicroSec)
-    : timer(timerBegin(0, 80, true)) {
-    timerAttachInterrupt(timer, callback, true);
+    : timer(timerBegin(3)) {
+    timerAttachInterrupt(timer, callback);
     setTimePeriod(timerPeriodMicroSec);
     stop();
 }
 
 PeriodicTimer::PeriodicTimer(void (*callback)(void),
                              uint64_t timerPeriodMicroSec, Stream& debug)
-    : timer(timerBegin(0, 80, true)), _debug(&debug) {
-    timerAttachInterrupt(timer, callback, true);
+    : timer(timerBegin(3)), _debug(&debug) {
+    timerAttachInterrupt(timer, callback);
     setTimePeriod(timerPeriodMicroSec);
     stop();
 }
 
 void PeriodicTimer::setTimePeriod(uint64_t timerPeriodMicroSec) {
-    bool startAfterConfig = false;
-
-    if (timerStarted(timer)) {
-        startAfterConfig = true;
-        timerStop(timer);
-    }
-
-    timerAlarmWrite(timer, timerPeriodMicroSec, true);
-
+    
+    timerStop(timer);
+    timerWrite(timer, timerPeriodMicroSec);
     timerRestart(timer);
-
-    if (startAfterConfig) {
-        timerStart(timer);
-    }
+    timerStart(timer);
 }
 
 void PeriodicTimer::start() {
-    timerRestart(timer);
-    timerAlarmEnable(timer);
     timerStart(timer);
 }
 

@@ -27,7 +27,7 @@ void loop() {
    
     // print IMU data every second
     if (millis() - prevPrintTime > 1000) {
-    Serial.print("\nAccelerometer:\n");
+    Serial.print("\nAccelerometer [G]:\n");
     Serial.print(" X = ");
     Serial.println(heart.imu.readFloatAccelX(), 4);
     Serial.print(" Y = ");
@@ -35,7 +35,7 @@ void loop() {
     Serial.print(" Z = ");
     Serial.println(heart.imu.readFloatAccelZ(), 4);
 
-    Serial.print("\nGyroscope:\n");
+    Serial.print("\nGyroscope [angular velocity]:\n");
     Serial.print(" X = ");
     Serial.println(heart.imu.readFloatGyroX(), 4);
     Serial.print(" Y = ");
@@ -48,7 +48,7 @@ void loop() {
     Serial.println(heart.imu.readTempC(), 4);
     Serial.print(" Degrees F = ");
     Serial.println(heart.imu.readTempF(), 4);
-                F("=====================================================\n");
+    F("=====================================================\n");
     prevPrintTime = millis();
     }
 }
