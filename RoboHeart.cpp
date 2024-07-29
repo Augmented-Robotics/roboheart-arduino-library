@@ -11,15 +11,7 @@
     "ROBOHEART"  // Define identifier before including DebuggerMsgs.h
 #include "DebuggerMsgs.h"
 
-// arduino-esp32 starts assigning channel from the top (channel 7)
-// lower the chances of collision by starting from the bottom
-// TODO: Remove on the new arduino-esp32 release
-#define MOTOR_A_CHANNEL1 0
-#define MOTOR_A_CHANNEL2 1
-#define MOTOR_B_CHANNEL1 2
-#define MOTOR_B_CHANNEL2 3
-#define MOTOR_C_CHANNEL1 4
-#define MOTOR_C_CHANNEL2 5
+
 
 LSM6DS3 RoboHeart::imu;
 float RoboHeart::_rotationX;

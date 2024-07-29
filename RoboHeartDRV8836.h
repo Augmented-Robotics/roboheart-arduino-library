@@ -37,7 +37,7 @@ class RoboHeartDRV8836 {
     int _pwmResolution = -1;
     int _pwmMaxDutyCycle = 256;
 
-    int _in1Channel = 0;  // TODO: Remove on the new arduino-esp32 release
+    int _in1Channel = 0; 
     int _in2Channel = 1;
 };
 
