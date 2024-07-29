@@ -5,10 +5,8 @@ RoboHeart heart = RoboHeart(Serial);
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Start:");
+  Serial.println("Starting RoboHeart automatic rotation example..");
   heart.begin();
-  
-  Serial.println("Automatic:");
   heart.setAutomaticRotation();
 }
 

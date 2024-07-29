@@ -114,6 +114,8 @@ bool RoboHeart::begin() {
 }
 
 void RoboHeart::setAutomaticRotation(){
+    
+    Serial.println("Automatic calibration started.");
     calculateDiff();
     int counter = 0;
     while (isCalibrated() == 0) {
@@ -121,9 +123,10 @@ void RoboHeart::setAutomaticRotation(){
         if(counter > 3){
             calculateDiff();
             counter = 0;
+            Serial.println("Calibration failed, trying again...");
         }
     }  
-    
+    Serial.println("RoboHeart calibrated");
     xTaskCreate(&rotationCallBack, "RotationTask", 2048, NULL, 5, NULL);
 }
 

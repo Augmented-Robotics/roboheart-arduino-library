@@ -58,7 +58,7 @@ void InterfaceBLE::charOnWriteInvCallback(std::string uuid, std::string value) {
 class CharacteristicCallbacks : public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic* pCharacteristic) {
         InterfaceBLE::charOnWriteInvCallback(
-            pCharacteristic->getUUID().toString(), pCharacteristic->getValue());
+            pCharacteristic->getUUID().toString().c_str(), pCharacteristic->getValue().c_str());
     }
 };
 
@@ -87,14 +87,14 @@ void InterfaceBLE::begin(uint8_t* package, uint8_t packageSize,
         _packageCharSize = sizeof(bleDefaultPackage);
     }
 
-    BLEService* pService = _Server->createService(_uuidsBLE->service);
+    BLEService* pService = _Server->createService(_uuidsBLE->service.c_str());
     DEBUG_IDENTIFIER("Service UUID: ");
     DEBUG_LN(pService->getUUID().toString().c_str());
 
     _Server->setCallbacks(new ServerCallbacks());
 
     _characteristic1 = pService->createCharacteristic(
-        _uuidsBLE->char1,
+        _uuidsBLE->char1.c_str(),
         BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
 
     _characteristic1->setCallbacks(new CharacteristicCallbacks());
@@ -102,7 +102,7 @@ void InterfaceBLE::begin(uint8_t* package, uint8_t packageSize,
     DEBUG_LN(_characteristic1->getUUID().toString().c_str());
 
     _characteristic2 = pService->createCharacteristic(
-        _uuidsBLE->char2, BLECharacteristic::PROPERTY_READ |
+        _uuidsBLE->char2.c_str(), BLECharacteristic::PROPERTY_READ |
                               BLECharacteristic::PROPERTY_WRITE |
                               BLECharacteristic::PROPERTY_NOTIFY);
     _characteristic2->addDescriptor(new BLE2902());
@@ -113,7 +113,7 @@ void InterfaceBLE::begin(uint8_t* package, uint8_t packageSize,
     DEBUG_LN(_characteristic2->getUUID().toString().c_str());
 
     _characteristic3 = pService->createCharacteristic(
-        _uuidsBLE->char3,
+        _uuidsBLE->char3.c_str(),
         BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
 
     _characteristic3->setCallbacks(new CharacteristicCallbacks());
@@ -128,7 +128,7 @@ void InterfaceBLE::begin(uint8_t* package, uint8_t packageSize,
 
     _Advertising = _Server->getAdvertising();
 
-    _Advertising->addServiceUUID(_uuidsBLE->service);
+    _Advertising->addServiceUUID(_uuidsBLE->service.c_str());
 
     _configured = true;
 }

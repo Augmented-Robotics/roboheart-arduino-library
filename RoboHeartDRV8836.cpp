@@ -40,10 +40,6 @@ void RoboHeartDRV8836::begin(int in1Pin, int in2Pin, int nsleepPin,
     pinMode(_in1Pin, OUTPUT);
     pinMode(_in2Pin, OUTPUT);
 
-    // Ensure that the PWM channel has been assigned to each pin
-    ledcAttachPin(_in1Pin, _in1Channel);
-    ledcAttachPin(_in2Pin, _in2Channel);
-
     // Calling only once the channels are set
     configPWM();
 
@@ -58,8 +54,8 @@ void RoboHeartDRV8836::configPWM(int freq, int resolution) {
     _pwmFreq = freq;
     _pwmResolution = resolution;
 
-    ledcSetup(_in1Channel, _pwmFreq, _pwmResolution);
-    ledcSetup(_in2Channel, _pwmFreq, _pwmResolution);
+    ledcAttachChannel(_in1Pin, _pwmFreq, _pwmResolution, _in1Channel);
+    ledcAttachChannel(_in2Pin, _pwmFreq, _pwmResolution, _in2Channel);
 
     _pwmMaxDutyCycle = (int)(pow(2, _pwmResolution) - 1);
 }

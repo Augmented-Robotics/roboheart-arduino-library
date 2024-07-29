@@ -16,7 +16,6 @@
 
 #include "RoboHeartDRV8836.h"
 #include "RoboHeartStepperMotor.h"
-#include "RoboHeartTimer.h"
 #include "pins_RoboHeart.h"
 #include <math.h>
 #define TRESHOLD 0.1  //treshold in degrees/s
