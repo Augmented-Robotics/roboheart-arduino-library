@@ -18,6 +18,9 @@
  * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
  */
 
+ 
+//TODO: Refactor, storeprohibited error fix.
+
 #include <RoboHeart.h>
 #include <RoboHeartBLE.h>
 #include <RoboHeartTimer.h>
@@ -192,7 +195,7 @@ void tick() {
 // and later used to indicate stable vertical position
 // of the Balancing Bot.
 void processPinInterrupt() {
-    offsetAngleDeg = heart.mpu.getAngleX();
+    offsetAngleDeg = heart.imu.readFloatGyroX();
     targetAngleDeg = offsetAngleDeg;
 }
 
@@ -206,24 +209,10 @@ void setup() {
 
     // Initialize RoboHeart with or without request for IMU automatic
     // calibration
-    bool mpuRequestCalibration = true;
-    heart.begin(mpuRequestCalibration);
+    heart.begin();
 
-    // One can set mpuRequestCalibration = false and
-    // use manual offsets (taken from previous calibrations)
-    // heart.mpu.setGyroOffsets(-1.76, -0.07, -0.9);
-    // heart.mpu.setAccOffsets(0.04, -0.00, 0.11);
-
-    // print calculated offsets
-    char offsets_msg[200];
-    sprintf(offsets_msg, "Offsets Gyro gx: %f, gy: %f gz: %f",
-            heart.mpu.getGyroXoffset(), heart.mpu.getGyroYoffset(),
-            heart.mpu.getGyroZoffset());
-    Serial.println(offsets_msg);
-    sprintf(offsets_msg, "Offsets Accel ax: %f, ay: %f az: %f",
-            heart.mpu.getAccXoffset(), heart.mpu.getAccYoffset(),
-            heart.mpu.getAccZoffset());
-    Serial.println(offsets_msg);
+    //Run IMU calibration and calculation of absolute rotation
+    heart.setAutomaticRotation();
 
     // BLE configuration
 
@@ -261,7 +250,7 @@ void loop() {
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
         unsigned long curTimeIntervalMS = millis();
         pidControlTick = 0;
-        currentAngleDeg = processAngle(heart.mpu.getAngleX());
+        currentAngleDeg = processAngle(heart.imu.readFloatGyroX());
 
         float error = currentAngleDeg - targetAngleDeg;
         errorSum = constrain(errorSum + error, -Kp * 50, Kp * 50);
