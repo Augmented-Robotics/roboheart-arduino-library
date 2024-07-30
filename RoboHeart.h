@@ -18,7 +18,7 @@
 #include "RoboHeartStepperMotor.h"
 #include "pins_RoboHeart.h"
 #include <math.h>
-#define TRESHOLD 0.1  //treshold in degrees/s
+#define TRESHOLD 0.2  //treshold in degrees/s
 
 #define MOTOR_A_CHANNEL1 0
 #define MOTOR_A_CHANNEL2 1
@@ -65,6 +65,8 @@ class RoboHeart {
     static float _driftZ;
     static bool tick;
     static void rotationCallBack(void *pvParameter);
+    float getTemperatureC();
+    float getTemperatureF();
 
    private:
     Stream* _debug = NULL;

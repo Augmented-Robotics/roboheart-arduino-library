@@ -20,7 +20,7 @@ void setup() {
     // Set up the RoboHeart
     heart.begin();
 
-    Serial.println("RoboHeart MPU Demo");
+    Serial.println("RoboHeart IMU Demo");
 }
 
 void loop() {
@@ -45,9 +45,9 @@ void loop() {
 
     Serial.print("\nThermometer:\n");
     Serial.print(" Degrees C = ");
-    Serial.println(heart.imu.readTempC(), 4);
+    Serial.println(heart.getTemperatureC(), 4);
     Serial.print(" Degrees F = ");
-    Serial.println(heart.imu.readTempF(), 4);
+    Serial.println(heart.getTemperatureF(), 4);
     F("=====================================================\n");
     prevPrintTime = millis();
     }

@@ -225,3 +225,12 @@ float RoboHeart::getRotationY(){
 float RoboHeart::getRotationZ(){
      return this->_rotationZ;
 }
+
+
+float RoboHeart::getTemperatureC(){
+    return (imu.readRawTemp() / 256.) + 25;
+}
+
+float RoboHeart::getTemperatureF(){
+    return (getTemperatureC()* 1.8) + 32 ;
+}
