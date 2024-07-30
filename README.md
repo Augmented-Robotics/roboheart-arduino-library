@@ -12,7 +12,8 @@ Highlight of the board features:
 
 ### Board pinout
 
-<img src="images/RoboHeart_Hercules_PINS.jpg" width="800"/>
+<img src="images/RoboHeart_Top_Pinout.jpg" width="800"/>
+<img src="images/RoboHeart_Bottom_Pinout.jpg" width="800"/>
 
 ### Library Installation
 1. Install [SparkFunLSM6DS3](https://github.com/sparkfun/SparkFun_LSM6DS3_Arduino_Library/tree/master) library through [Arduino Library Manager](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries)
