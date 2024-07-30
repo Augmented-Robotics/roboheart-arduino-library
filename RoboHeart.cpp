@@ -13,7 +13,7 @@
 
 
 
-LSM6DS3 RoboHeart::imu;
+LSM6DS3 RoboHeart::imu(I2C_MODE, LSM6DS3_I2C_ADDR);
 float RoboHeart::_rotationX;
 float RoboHeart::_driftX;
 float RoboHeart::_rotationY;
