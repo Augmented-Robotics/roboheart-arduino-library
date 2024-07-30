@@ -15,9 +15,6 @@
  * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
  */
 
-
-//TODO: Refactor, storeprohibited error fix.
-
 #include <RoboHeart.h>
 #include <RoboHeartTimer.h>
 
@@ -74,7 +71,7 @@ void tick() {
 // and later used to indicate stable vertical position
 // of the Balancing Bot.
 void processPinInterrupt() {
-    offsetAngleDeg = heart.imu.readFloatGyroX();
+    offsetAngleDeg = heart.getRotationX();
     targetAngleDeg = offsetAngleDeg;
 }
 
@@ -113,7 +110,7 @@ void loop() {
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
         unsigned long curTimeIntervalMS = millis();
         pidControlTick = 0;
-        currentAngleDeg = processAngle(heart.imu.readFloatGyroX());
+        currentAngleDeg = processAngle(heart.getRotationX());
 
         float error = currentAngleDeg - targetAngleDeg;
         errorSum = constrain(errorSum + error, -Kp * 50, Kp * 50);

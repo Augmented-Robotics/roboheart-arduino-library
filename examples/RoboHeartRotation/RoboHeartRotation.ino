@@ -52,13 +52,13 @@ void setup() {
 
   Serial.println("RoboHeart LSM6DS3 rotation demo");
 
-  calculateDiff();
+  calculateDrifts();
   int counter = 0;
   Serial.println("RoboHeart calibrating...");
   while (isCalibrated() == 0) {
       counter++;
       if(counter > 3){
-          calculateDiff();
+          calculateDrifts();
           counter = 0;
           Serial.println("Calibration failed, trying again...");
       }
