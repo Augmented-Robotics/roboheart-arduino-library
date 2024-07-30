@@ -27,7 +27,7 @@
 #define MOTOR_C_CHANNEL1 4
 #define MOTOR_C_CHANNEL2 5
 
-#define LSM6DS3_I2C_ADDR 0x6B // or 0x6A - Address is defined in Library
+#define LSM6DS3_I2C_ADDR 0x6A // or 0x6B - Address is defined in Library
 
 typedef struct {
     int command;
