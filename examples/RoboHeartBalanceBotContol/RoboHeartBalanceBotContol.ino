@@ -173,8 +173,9 @@ void bleConnected() {
 
 // handle -180 after crossing 180 Degrees
 float processAngle(float angle) {
-    if (angle < -90) {
-        return angle = 360 + angle;
+    // handle -180 after crossing 180
+    if (angle > 180) {
+        return angle - 360;
     }
     return angle;
 }
@@ -192,8 +193,8 @@ void tick() {
 // and later used to indicate stable vertical position
 // of the Balancing Bot.
 void processPinInterrupt() {
-    offsetAngleDeg = heart.getRotationX();
-    targetAngleDeg = offsetAngleDeg;
+    heart.resetGyro();
+    errorSum = 0;
 }
 
 InterfaceBLE ble = InterfaceBLE();

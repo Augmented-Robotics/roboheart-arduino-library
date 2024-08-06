@@ -18,7 +18,7 @@
 #include "RoboHeartStepperMotor.h"
 #include "pins_RoboHeart.h"
 #include <math.h>
-#define TRESHOLD 0.2  //treshold in degrees/s
+#define TRESHOLD 0.3  //treshold in degrees/s
 
 #define MOTOR_A_CHANNEL1 0
 #define MOTOR_A_CHANNEL2 1
@@ -74,8 +74,8 @@ class RoboHeart {
     RoboHeartDRV8836* _turnMotor = NULL;
     RoboHeartDRV8836* _directionMotor = NULL;
 
-    void calculateDiff(int timeout_ms = 500);
-    bool isCalibrated(int timeout_ms = 500);
+    void calculateDiff(int timeout_ms = 250);
+    bool isCalibrated(int timeout_ms = 250);
 
 };
 

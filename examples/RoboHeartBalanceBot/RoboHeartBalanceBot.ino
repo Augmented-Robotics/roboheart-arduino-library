@@ -71,8 +71,7 @@ void tick() {
 // and later used to indicate stable vertical position
 // of the Balancing Bot.
 void processPinInterrupt() {
-    offsetAngleDeg = processAngle(heart.getRotationX());
-    targetAngleDeg = offsetAngleDeg;
+    heart.resetGyro();
     errorSum = 0;
 }
 

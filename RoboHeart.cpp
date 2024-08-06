@@ -209,9 +209,8 @@ bool RoboHeart::isCalibrated(int timeout_ms) {
         }
     delay(1);
     }
-    
     Serial.println(counter);
-    return (counter < (timeout_ms / 4));
+    return (counter < (timeout_ms / 3));
 }
 
 float RoboHeart::getRotationX(){
