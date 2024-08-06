@@ -227,6 +227,12 @@ float RoboHeart::getRotationZ(){
 }
 
 
+void RoboHeart::resetGyro(){
+    this->_rotationX = 0;
+    this->_rotationY = 0;
+    this->_rotationZ = 0;
+}
+
 float RoboHeart::getTemperatureC(){
     return (imu.readRawTemp() / 256.) + 25;
 }

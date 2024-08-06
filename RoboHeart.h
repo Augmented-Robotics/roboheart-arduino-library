@@ -50,6 +50,7 @@ class RoboHeart {
     float getRotationX();
     float getRotationY();
     float getRotationZ();
+    void resetGyro();
 
     RoboHeartStepperMotor stepper;
     RoboHeartDRV8836 motorA;

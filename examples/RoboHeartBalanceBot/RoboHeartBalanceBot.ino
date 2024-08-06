@@ -21,9 +21,9 @@
 RoboHeart heart = RoboHeart(Serial);
 
 // PID controller parameters
-#define Kp 20
-#define Kd 0.001
-#define Ki 40
+#define Kp 6.5
+#define Kd 0
+#define Ki 0
 
 #define CONTROL_TICK_PERIOD_US 100.0
 
@@ -53,8 +53,8 @@ unsigned long prevTimeIntervalMS = 0;
 // handle -180 after crossing 180 Degrees
 float processAngle(float angle) {
     // handle -180 after crossing 180
-    if (angle < -90) {
-        return angle = 360 + angle;
+    if (angle > 180) {
+        return angle - 360;
     }
     return angle;
 }
@@ -71,8 +71,9 @@ void tick() {
 // and later used to indicate stable vertical position
 // of the Balancing Bot.
 void processPinInterrupt() {
-    offsetAngleDeg = heart.getRotationX();
+    offsetAngleDeg = processAngle(heart.getRotationX());
     targetAngleDeg = offsetAngleDeg;
+    errorSum = 0;
 }
 
 // Periodic timer executes the control ticks
