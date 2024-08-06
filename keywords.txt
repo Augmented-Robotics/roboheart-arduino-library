@@ -40,7 +40,7 @@ stepReverse KEYWORD2
 start   KEYWORD2
 stop    KEYWORD2
 setTimePeriod   KEYWORD2
-
+resetGyro KEYWORD2
 ###################################################################
 # Constants
 ###################################################################
