@@ -23,22 +23,22 @@ float RoboHeart::_driftZ;
 
 void RoboHeart::rotationCallBack(void *pvParameter)
 {
-    unsigned long startTime = millis();
+    uint32_t start_time_us = (uint32_t)esp_timer_get_time();
     
     float prev_angular_velocityX = 0;
     float prev_angular_velocityY = 0;
     float prev_angular_velocityZ = 0;
     while(true){
-        unsigned long actualTime = millis();
-        unsigned long diff = actualTime - startTime; 
-        if(diff > 5){
+        uint32_t actual_time_us = (uint32_t)esp_timer_get_time();
+        uint32_t diff_us = actual_time_us - start_time_us; 
+        if(diff_us > PERIOD_US){
             float angular_velocityX = imu.readFloatGyroX() - _driftX;
             float angular_velocityY = imu.readFloatGyroY() - _driftY;
             float angular_velocityZ = imu.readFloatGyroZ() - _driftZ;
 
-            _rotationX += ((prev_angular_velocityX+angular_velocityX)/2)*(0.001*diff);
-            _rotationY += ((prev_angular_velocityY+angular_velocityY)/2)*(0.001*diff);
-            _rotationZ += ((prev_angular_velocityZ+angular_velocityZ)/2)*(0.001*diff);
+            _rotationX += ((prev_angular_velocityX+angular_velocityX)/2)*(0.000001*diff_us);
+            _rotationY += ((prev_angular_velocityY+angular_velocityY)/2)*(0.000001*diff_us);
+            _rotationZ += ((prev_angular_velocityZ+angular_velocityZ)/2)*(0.000001*diff_us);
 
             prev_angular_velocityX = angular_velocityX;
             prev_angular_velocityY = angular_velocityY;
@@ -58,7 +58,7 @@ void RoboHeart::rotationCallBack(void *pvParameter)
             } else if (_rotationZ < 0) {
             _rotationZ += 360;
             }
-            startTime = actualTime;
+            start_time_us = actual_time_us;
         }
     }
 }

@@ -19,6 +19,7 @@
 #include "pins_RoboHeart.h"
 #include <math.h>
 #define TRESHOLD 0.3  //treshold in degrees/s
+#define PERIOD_US 200
 
 #define MOTOR_A_CHANNEL1 0
 #define MOTOR_A_CHANNEL2 1
