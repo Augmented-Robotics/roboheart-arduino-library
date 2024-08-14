@@ -134,6 +134,7 @@ void setup()
         if (request->hasParam(PARAM_INPUT_1)) {
             inputMessage = request->getParam(PARAM_INPUT_1)->value();
             inputParam = PARAM_INPUT_1;
+            Kp = atoi(inputMessage.c_str());
         }
         else {
             inputMessage = "No message sent";
@@ -152,6 +153,7 @@ void setup()
         // GET Kp value on <ESP_IP>/setKi?param_Ki=<inputMessage>
         if (request->hasParam(PARAM_INPUT_2)) {
             inputMessage = request->getParam(PARAM_INPUT_2)->value();
+            Ki = atoi(inputMessage.c_str());
             inputParam = PARAM_INPUT_2;
         }
         else {
@@ -165,13 +167,14 @@ void setup()
     });
 
     // Send a GET request to <ESP_IP>/setKd?param_Kd=<inputMessage>
-    server.on("/setKi", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    server.on("/setKd", HTTP_GET, [] (AsyncWebServerRequest *request) {
         String inputMessage;
         String inputParam;
         // GET Kp value on <ESP_IP>/setKd?param_Kd=<inputMessage>
         if (request->hasParam(PARAM_INPUT_3)) {
             inputMessage = request->getParam(PARAM_INPUT_3)->value();
             inputParam = PARAM_INPUT_3;
+            Kd = atoi(inputMessage.c_str());
         }
         else {
             inputMessage = "No message sent";
