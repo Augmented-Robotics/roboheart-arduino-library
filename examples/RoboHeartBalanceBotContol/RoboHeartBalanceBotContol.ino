@@ -248,7 +248,7 @@ void loop() {
     if (pidControlTick >= PID_CONTROL_PRESCALER) {
         unsigned long curTimeIntervalMS = millis();
         pidControlTick = 0;
-        currentAngleDeg = processAngle(heart.heart.getRotationX());
+        currentAngleDeg = processAngle(heart.getRotationX());
 
         float error = currentAngleDeg - targetAngleDeg;
         errorSum = constrain(errorSum + error, -Kp * 50, Kp * 50);
