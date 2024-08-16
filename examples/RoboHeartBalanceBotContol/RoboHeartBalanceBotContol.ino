@@ -6,8 +6,11 @@
  * is provided. It establishes connection
  * through Bluetooth.
  * 
- * Use button to set the stable vertical position
+ * Use BOOT button to set the stable vertical position
  * of the Balancing Bot.
+ *
+ * PID parameters are set to specific setup (mass distribution, weight, motoros, gears, battery parameters, etc.)
+ * Please use our another example RoboHeartPIDFittingExample for better way of fitting PID parameters.
  * 
  * Building a One-board balancing bot instructions can be found here:
  * https://www.instructables.com/A-One-board-Balancing-Bot-With-a-RoboHeart-Electro/
@@ -25,8 +28,6 @@
 RoboHeart heart = RoboHeart(Serial);
 
 // PID controller parameters.
-// You should change parameters based on your setup.
-// You can use our another example RoboHeartPIDFittingExample to try set parameters to stabilise.
 #define Kp 20
 #define Kd 0
 #define Ki 40
@@ -212,7 +213,7 @@ void setup() {
     heart.begin();
     
     Serial.println("Please let RoboHeart in stable position...");
-    
+
     //Run IMU calibration and calculation of absolute rotation
     heart.setAutomaticRotation();
 

@@ -55,7 +55,7 @@ void setup() {
   calculateDrifts();
   int counter = 0;
   Serial.println("RoboHeart calibrating...");
-  Serial.println("Please let it in stable position...");
+  Serial.println("Please let RoboHeart in stable position...");
   while (isCalibrated() == 0) {
       counter++;
       if(counter > 3){

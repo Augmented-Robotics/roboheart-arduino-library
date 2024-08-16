@@ -15,7 +15,7 @@ void setup()
 {
   Serial.begin(115200);
   Serial.println("Starting RoboHeart automatic rotation example...");
-  Serial.println("Please let it in stable position...");
+  Serial.println("Please let RoboHeart in stable position...");
   heart.begin();
   heart.setAutomaticRotation();
 }
