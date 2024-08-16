@@ -1,7 +1,7 @@
 /* This example shows how to calculate rotation
  * from the built-in IMU data.
  *
- * Created  27/06/2024
+ * Created  27/07/2024
  * By Augmented Robotics
  * 
  * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
