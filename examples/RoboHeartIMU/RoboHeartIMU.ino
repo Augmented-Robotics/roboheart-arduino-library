@@ -27,28 +27,28 @@ void loop() {
    
     // print IMU data every second
     if (millis() - prevPrintTime > 1000) {
-    Serial.print("\nAccelerometer [G]:\n");
-    Serial.print(" X = ");
-    Serial.println(heart.imu.readFloatAccelX(), 4);
-    Serial.print(" Y = ");
-    Serial.println(heart.imu.readFloatAccelY(), 4);
-    Serial.print(" Z = ");
-    Serial.println(heart.imu.readFloatAccelZ(), 4);
+        Serial.print("\nAccelerometer [G]:\n");
+        Serial.print(" X = ");
+        Serial.println(heart.imu.readFloatAccelX(), 4);
+        Serial.print(" Y = ");
+        Serial.println(heart.imu.readFloatAccelY(), 4);
+        Serial.print(" Z = ");
+        Serial.println(heart.imu.readFloatAccelZ(), 4);
 
-    Serial.print("\nGyroscope [angular velocity]:\n");
-    Serial.print(" X = ");
-    Serial.println(heart.imu.readFloatGyroX(), 4);
-    Serial.print(" Y = ");
-    Serial.println(heart.imu.readFloatGyroY(), 4);
-    Serial.print(" Z = ");
-    Serial.println(heart.imu.readFloatGyroZ(), 4);
+        Serial.print("\nGyroscope [angular velocity]:\n");
+        Serial.print(" X = ");
+        Serial.println(heart.imu.readFloatGyroX(), 4);
+        Serial.print(" Y = ");
+        Serial.println(heart.imu.readFloatGyroY(), 4);
+        Serial.print(" Z = ");
+        Serial.println(heart.imu.readFloatGyroZ(), 4);
 
-    Serial.print("\nThermometer:\n");
-    Serial.print(" Degrees C = ");
-    Serial.println(heart.getTemperatureC(), 4);
-    Serial.print(" Degrees F = ");
-    Serial.println(heart.getTemperatureF(), 4);
-    F("=====================================================\n");
-    prevPrintTime = millis();
+        Serial.print("\nThermometer:\n");
+        Serial.print(" Degrees C = ");
+        Serial.println(heart.getTemperatureC(), 4);
+        Serial.print(" Degrees F = ");
+        Serial.println(heart.getTemperatureF(), 4);
+        F("=====================================================\n");
+        prevPrintTime = millis();
     }
 }

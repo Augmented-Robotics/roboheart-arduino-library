@@ -1,5 +1,5 @@
 /* This example shows how to calculate rotation
- * from LSM6DS3 data.
+ * from the built-in IMU data.
  *
  * Created  27/06/2024
  * By Augmented Robotics
@@ -55,6 +55,7 @@ void setup() {
   calculateDrifts();
   int counter = 0;
   Serial.println("RoboHeart calibrating...");
+  Serial.println("Please let it in stable position...");
   while (isCalibrated() == 0) {
       counter++;
       if(counter > 3){

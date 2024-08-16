@@ -116,6 +116,7 @@ void RoboHeart::setAutomaticRotation(){
             calculateDiff();
             counter = 0;
             Serial.println("Calibration failed, trying again...");
+            erial.println("Please let RoboHeart in stable position...");
         }
     }  
     Serial.println("RoboHeart calibrated");
@@ -185,7 +186,7 @@ char* RoboHeart::handleMotorMessage(MotorMSGType motorMSG) {
 
 
 void RoboHeart::calculateDiff(int timeout_ms){
-    Serial.println("Drift");
+    //Serial.println("Drift");
     _driftX = 0;
     _driftY = 0;
     _driftZ = 0;
@@ -209,7 +210,7 @@ bool RoboHeart::isCalibrated(int timeout_ms) {
         }
     delay(1);
     }
-    Serial.println(counter);
+    //Serial.println(counter);
     return (counter < (timeout_ms / 3));
 }
 

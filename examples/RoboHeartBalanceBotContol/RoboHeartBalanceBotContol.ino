@@ -12,7 +12,7 @@
  * Building a One-board balancing bot instructions can be found here:
  * https://www.instructables.com/A-One-board-Balancing-Bot-With-a-RoboHeart-Electro/
  * 
- * Created  30/01/2022
+ * Created  16/08/2024
  * By Augmented Robotics
  * 
  * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
@@ -24,7 +24,9 @@
 
 RoboHeart heart = RoboHeart(Serial);
 
-// PID controller parameters
+// PID controller parameters.
+// You should change parameters based on your setup.
+// You can use our another example RoboHeartPIDFittingExample to try set parameters to stabilise.
 #define Kp 20
 #define Kd 0
 #define Ki 40
@@ -208,7 +210,9 @@ void setup() {
     // Initialize RoboHeart with or without request for IMU automatic
     // calibration
     heart.begin();
-
+    
+    Serial.println("Please let RoboHeart in stable position...");
+    
     //Run IMU calibration and calculation of absolute rotation
     heart.setAutomaticRotation();
 
