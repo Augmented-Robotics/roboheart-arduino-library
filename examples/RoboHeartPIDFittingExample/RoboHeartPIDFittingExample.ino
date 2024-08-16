@@ -31,7 +31,7 @@ int Ki = 0;
 #define DC_CONTROL_PRESCALER 15  // Control ticks passing before DC Motor Control
 #define STATISTICS_PRESCALER \
     DC_CONTROL_PRESCALER *   \
-        4  // Control ticks passing before all the debug printing is performed
+        2  // Control ticks passing before all the debug printing is performed
 
 // Motor control parameters
 float prevAngleDeg = 0;      // Store previos angle

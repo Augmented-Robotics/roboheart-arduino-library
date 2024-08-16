@@ -28,9 +28,9 @@
 RoboHeart heart = RoboHeart(Serial);
 
 // PID controller parameters.
-#define Kp 20
-#define Kd 0
-#define Ki 40
+#define Kp 7
+#define Ki 2
+#define Kd 0.01
 
 #define CONTROL_TICK_PERIOD_US 100.0  // Control tick period in micro-seconds
 
