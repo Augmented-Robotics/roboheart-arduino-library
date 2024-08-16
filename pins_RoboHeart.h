@@ -12,8 +12,8 @@
 
 #define SLEEP_MOTOR_ABC 2  //  nSLEEP 
 
-#define FAULT_MOTOR_AB 34  //  nSLEEP 
-#define FAULT_MOTOR_C 35  //  nSLEEP 
+#define FAULT_MOTOR_AB 34  //  FaultAB 
+#define FAULT_MOTOR_C 35  //  FaultC
 
 #define LED_ROBOHEART 13  
 #define BUTTON_ROBOHEART 0
@@ -30,6 +30,5 @@
 #define GSM_RTS 14
 #define GSM_TX TXD1
 #define GSM_RX RXD1
-//#define BATTERY_PIN 36
 
 #endif
