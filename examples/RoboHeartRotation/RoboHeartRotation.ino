@@ -10,7 +10,7 @@
 #include <RoboHeart.h>
 #include <Wire.h>
 #include <math.h>
-#define TRESHOLD 0.1  //treshold in rad/s
+#define TRESHOLD 0.3  //treshold in rad/s
 
 float drift_x = 0;
 float drift_y = 0;
@@ -31,7 +31,7 @@ void calculateDrifts(int timeout_ms = 500) {
   }
 }
 
-bool isCalibrated(int timeout_ms = 1000) {
+bool isCalibrated(int timeout_ms = 200) {
   unsigned long time = millis();
   long counter = 0;
   while ((millis() - time) < timeout_ms) {
@@ -40,7 +40,7 @@ bool isCalibrated(int timeout_ms = 1000) {
     }
     delay(1);
   }
-  return (counter < (timeout_ms / 5));
+  return (counter < (timeout_ms / 3));
 }
 
 float rotation[3] = { 0, 0, 0 };
