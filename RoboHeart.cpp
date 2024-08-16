@@ -116,7 +116,7 @@ void RoboHeart::setAutomaticRotation(){
             calculateDiff();
             counter = 0;
             Serial.println("Calibration failed, trying again...");
-            erial.println("Please let RoboHeart in stable position...");
+            Serial.println("Please let RoboHeart in stable position...");
         }
     }  
     Serial.println("RoboHeart calibrated");
