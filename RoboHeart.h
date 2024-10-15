@@ -32,6 +32,10 @@
 #define MOTOR_B 1
 #define MOTOR_C 2
 
+#define CALIBRATION_COUNTDOWN 5
+#define ACCELEROMETER_CUTOFF 32
+#define NEW_IMU_DATA_BIT 1
+
 #define LSM6DS3_I2C_ADDR 0x6A // or 0x6B - Address is defined in Library
 
 typedef struct {
@@ -39,6 +43,15 @@ typedef struct {
     int speed;
     int steeringPower;
 } MotorMSGType;
+
+typedef struct {
+  int16_t rX;
+  int16_t rY;
+  int16_t rZ;
+  int16_t aX;
+  int16_t aY;
+  int16_t aZ;
+} tIMUdata;
 
 class RoboHeart {
    public:
@@ -62,26 +75,30 @@ class RoboHeart {
     RoboHeartDRV8836 motorB;
     RoboHeartDRV8836 motorC;
     static LSM6DS3 imu;
-   
+    
+    static EventGroupHandle_t xIMUeventGroup;
+    static SemaphoreHandle_t xVarMutex;
     static float _rotationX;
-    static float _driftX;
     static float _rotationY;
-    static float _driftY;
     static float _rotationZ;
-    static float _driftZ;
     static bool tick;
-    static void rotationCallBack(void *pvParameter);
+    static tIMUdata imuData;
+
     float getTemperatureC();
     float getTemperatureF();
     void setPWM(int motor, int freq, int pwm);
+    
+    static void computeEulerRates(float omega_x, float omega_y, float omega_z, float phi, float theta, float* dphi, float* dtheta, float* dpsi);
+    static void rungeKutta4(float* phi, float* theta, float* psi, float omega_x, float omega_y, float omega_z, float dt);
+    static void rungeKutta2(float* phi, float* theta, float* psi, float omega_x, float omega_y, float omega_z, float dt);
+
+    static void IMUgetDataTask(void *pvParameter);
+    static void IMUcalculateDataTask(void *pvParameter);
 
    private:
     Stream* _debug = NULL;
     RoboHeartDRV8836* _turnMotor = NULL;
     RoboHeartDRV8836* _directionMotor = NULL;
-
-    void calculateDiff(int timeout_ms = 250);
-    bool isCalibrated(int timeout_ms = 250);
 
 };
 
