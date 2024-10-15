@@ -105,6 +105,17 @@ bool RoboHeart::begin() {
     return true;
 }
 
+
+void RoboHeart::setPWM(int motor, int freq, int pwm){
+    if(motor == MOTOR_A){
+        motorA.configPWM(freq, pwm);
+    } else if (motor == MOTOR_B){
+        motorB.configPWM(freq, pwm);
+    } else if (motor == MOTOR_C){
+        motorC.configPWM(freq, pwm);
+    }
+}
+
 void RoboHeart::setAutomaticRotation(){
     
     Serial.println("Automatic calibration started.");

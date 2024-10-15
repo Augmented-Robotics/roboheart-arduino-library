@@ -1,7 +1,7 @@
 /* This example shows how to control the built-in
  * Stepper motor drivers.
  * 
- * Created  30/01/2022
+ * Created  15/10/2024
  * By Augmented Robotics
  * 
  * Check out https://roboheart.de/en_gb/ for more information about RoboHeart.
@@ -39,6 +39,10 @@ void setup() {
 
     // Set up the RoboHeart
     heart.begin();
+
+    //Increase PWM frequency to control stepper.
+    heart.setPWM(MOTOR_A, 2500, 8);
+    heart.setPWM(MOTOR_B, 2500, 8);
 
     // start the timer
     timer.start();
