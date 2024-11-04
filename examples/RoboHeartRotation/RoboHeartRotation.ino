@@ -26,14 +26,6 @@ RoboHeart heart = RoboHeart(Serial);
 
 float phi = 0.0, theta = 0.0, psi = 0.0;
 
-typedef struct {
-  int16_t rX;
-  int16_t rY;
-  int16_t rZ;
-  int16_t aX;
-  int16_t aY;
-  int16_t aZ;
-} tIMUdata;
 static tIMUdata imuData = {0};
 
 void computeEulerRates(float omega_x, float omega_y, float omega_z, float phi, float theta, float* dphi, float* dtheta, float* dpsi) {
