@@ -100,17 +100,6 @@ void bleConnected() {
     heart.motorC.sleep(false);
 }
 
-int battery_percent(){
-   float raw_value = analogRead(BATTERY_PIN);
-   float voltage_level = ((raw_value  * 3.3)/ MAX_ANALOG_VAL )* 2 ; // multiply the analogRead value by 2x to get the true battery
-   //Serial.println(voltage_level);
-   float battery_fraction = voltage_level / MAX_BATTERY_VOLTAGE;
-   float voltage_range = voltage_level - MIN_BATTERY_VOLTAGE;
-   int percent = (voltage_range / BATTERY_RANGE) * 100;
-   return percent;
-}
-
-
 void setup() {
     Serial.begin(115200);
 
@@ -136,12 +125,10 @@ void setup() {
 
 void loop() {
 
-    int percent = battery_percent();
     // Send some information to the ble
     if (bleDeviceConnected) {
         blePackage[0]++;
         ble.sendNotifyChar2(blePackage);
-        ble.sendNotifyChar3((uint8_t *)(&percent));
         delay(3);  // bluetooth stack will go into congestion, if too many packets
                  // are sent, in 6 hours test we were able to go as low as 3ms
     }
